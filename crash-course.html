@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="robots" content="noindex, nofollow">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reef Architect — Crash Course into Reefing</title>
+    <!-- Load user theme before CSS -->
+  <script>
+    (function(){
+      try {
+        var saved = localStorage.getItem('theme');
+        var t = (saved==='dark'||saved==='light')
+          ? saved
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch(e){}
+    })();
+  </script>
+
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    /* page-specific styling */
+    .course-hero {
+      margin: 16px 0;
+      padding: 16px;
+      background: var(--bg-elev);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+    }
+    .course-hero h2 { margin: 0 0 8px 0; }
+    .tab-panel h3 { margin-top: 0; }
+    .tab-panel p { line-height: 1.55; }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 900px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+    .recap {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--card-border);
+    }
+    .recap h4 {
+      margin: 0 0 6px 0;
+      font-size: .98rem;
+      opacity: .85;
+      letter-spacing: .2px;
+    }
+    .recap ul { margin: 0; padding-left: 18px; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <h1>🪸 Reef Architect</h1>
+      <span class="subtitle">Crash Course into Reefing</span>
+    </div>
+    <div class="controls">
+      <a href="index.html" class="secondary">← Aquarium Builder</a>
+      <button id="themeToggle" class="secondary" aria-pressed="false" title="Toggle light/dark">🌗 Theme</button>
+    </div>
+  </header>
+
+  <main id="app">
+    <section class="course-hero">
+      <h2>Crash Course into Reefing</h2>
+       <p>
+  This crash course is organized into eight phases to quickly introduce the basics of planning, building, and caring for your new reef aquarium as it matures.
+  Read each tab to understand the <em>why</em>, then use the recap bullets as a checklist before you move on.
+  Think of this as a guide, not a complete class. We recommend exploring each topic in more depth before you start your build.
+  Follow the order. Take your time. Stability beats speed.
+</p>
+
+    </section>
+
+    <!-- Tabs -->
+    <section class="tabs" id="course-tabs">
+      <button class="tab active" data-target="#tab-plan">Plan & Gear</button>
+      <button class="tab" data-target="#tab-water">Water & Salt</button>
+      <button class="tab" data-target="#tab-setup">Setup Day</button>
+      <button class="tab" data-target="#tab-cycle">Cycle & First Tests</button>
+      <button class="tab" data-target="#tab-flow">Flow, Filtration & Nutrients</button>
+      <button class="tab" data-target="#tab-light">Lighting & PAR On-Ramp</button>
+      <button class="tab" data-target="#tab-stock">Stocking & Acclimation</button>
+      <button class="tab" data-target="#tab-care">Maintenance & Upgrades</button>
+    </section>
+
+    <!-- Panels -->
+    <section class="stage visible tab-panel" id="tab-plan">
+      <div class="card">
+        <h3>Plan & Gear</h3>
+        <p>
+          Start by defining your destination. A 20–40 gallon AIO makes a forgiving first reef:
+          enough water volume to buffer mistakes, compact enough to manage. Decide early whether you’ll run an AIO or a sump;
+          both work, but a sump adds room for a skimmer, refugium, and cleaner cable management. Sketch a budget in tiers—tank/stand,
+          heater, return, flow, light, ATO, and basic test kits. Choose rock for structure first and looks second: stable, interlocked
+          arches beat teetering “cool” stacks. Think about where cords and hoses will live before the tank is wet. Reefing gets easier
+          when the system itself does most of the work—and that starts with a deliberate plan.
+        </p>
+        <div class="recap">
+          <h4>Recap</h4>
+          <ul>
+            <li>Pick size/format (AIO vs sump) and set a realistic budget.</li>
+            <li>Core gear: return, heater (3–5 W/gal), flow, light, ATO, test kits.</li>
+            <li>Prioritize stable aquascape and clean cable/plumbing paths.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="stage tab-panel" id="tab-water">
+      <div class="card">
+        <h3>Water & Salt</h3>
+        <p>
+          Great reefs start with great water. Use RODI to bring total dissolved solids near zero; this prevents nuisance algae
+          and unpredictability. Mix your chosen salt to 35 ppt (1.025–1.026 SG) and stick with it—consistency is kinder to corals
+          than constant brand-hopping. Match your foundation parameters to your long-term plan: if you aim for LPS and softies,
+          you can live with moderate alkalinity and minimal dosing; if SPS is in your future, choose a salt and routine that
+          supports stable alkalinity from day one. Keep a refractometer calibrated—salinity drift is the silent tank wrecker.
+        </p>
+        <div class="recap">
+          <h4>Recap</h4>
+          <ul>
+            <li>RODI water (near 0 TDS) + consistent salt at 35 ppt (1.025–1.026 SG).</li>
+            <li>Pick a salt that fits your dosing/stability goals.</li>
+            <li>Calibrate refractometer; prevent salinity creep.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="stage tab-panel" id="tab-setup">
+      <div class="card">
+        <h3>Setup Day</h3>
+        <p>
+          Dry-fit everything before a drop of water touches the glass. Level the stand, set the tank, and confirm the aquascape
+          is rock-solid—push on it from different angles. Rinse sand until the water runs mostly clear. Fill with mixed saltwater,
+          start the heater and return, and let the system run while you check for leaks. Keep lights off; you’re growing bacteria,
+          not algae. If you have an ATO, set it up now so evaporation never becomes a guessing game. This is the calm before the
+          biological storm—use it to make tidy, safe cable paths with drip loops.
+        </p>
+        <div class="recap">
+          <h4>Recap</h4>
+          <ul>
+            <li>Level stand; dry-fit plumbing; lock aquascape; rinse sand.</li>
+            <li>Fill with 35 ppt saltwater; start heat/return; leak check.</li>
+            <li>Lights off; set up ATO and clean cable management.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="stage tab-panel" id="tab-cycle">
+      <div class="card">
+        <h3>Cycle & First Tests</h3>
+        <p>
+          Seed the tank with bottled bacteria and an ammonia source, then watch the nitrogen story unfold.
+          Ammonia rises first, nitrite follows, and nitrate appears last. Test every few days and be patient.
+          The tank is ready when ammonia and nitrite read zero and nitrate is present. Do a partial water change
+          to bring nitrate into a comfortable range. Early diatoms and algae are normal—resist the urge to overreact.
+          Stability is built on measured inputs and time, not on constant tinkering.
+        </p>
+        <div class="recap">
+          <h4>Recap</h4>
+          <ul>
+            <li>Bacteria + ammonia source; test NH₃/NH₂/NO₃ every 2–3 days.</li>
+            <li>“Ready” = NH₃ = 0, NO₂ = 0, NO₃ present; then water change.</li>
+            <li>Expect early algae; avoid drastic changes.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="stage tab-panel" id="tab-flow">
+      <div class="card">
+        <h3>Flow, Filtration & Nutrients</h3>
+        <p>
+          Corals breathe with your flow. Aim for broad, randomized movement that sweeps detritus off the rock and
+          keeps water exchanging across coral surfaces without blasting tissue. Mechanical filtration (floss or socks)
+          polishes the water; a skimmer adds gas exchange and nutrient export as bioload grows. Many tanks thrive with
+          simple export—regular water changes and prudent feeding—while others add refugiums or reactors later.
+          Pick nutrient targets you can actually maintain and stick to them; consistent nitrate and phosphate levels
+          make coral coloration and growth far more predictable.
+        </p>
+        <div class="recap">
+          <h4>Recap</h4>
+          <ul>
+            <li>Randomized, non-laminar flow; no dead spots.</li>
+            <li>Mechanical filter → optional skimmer → optional refugium/reactors.</li>
+            <li>Set realistic NO₃/PO₄ targets and maintain them consistently.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="stage tab-panel" id="tab-light">
+      <div class="card">
+        <h3>Lighting & PAR On-Ramp</h3>
+        <p>
+          Light is food for corals—and too much, too fast, burns them. Start low and ramp up slowly.
+          Target ranges (as general guides): softies under ~100–150 PAR, many LPS around ~75–200 PAR,
+          and SPS commonly ~200–350+ PAR depending on species and placement. Keep spectrum stable; resist the urge
+          to chase “looks” daily. A consistent photoperiod and gradual intensity changes do more for coral health
+          than endless schedule tweaks. If you can borrow a PAR meter, do it—it replaces guesswork with confidence.
+        </p>
+        <div class="recap">
+          <h4>Recap</h4>
+          <ul>
+            <li>Ramp intensity slowly; maintain a consistent photoperiod.</li>
+            <li>Softies ~&lt;100–150 PAR; LPS ~75–200; SPS ~200–350+ (rule-of-thumb).</li>
+            <li>Keep spectrum stable; measure PAR if possible.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="stage tab-panel" id="tab-stock">
+      <div class="card">
+        <h3>Stocking & Acclimation</h3>
+        <p>
+          Add life in a calm, deliberate sequence. Start with a modest clean-up crew to graze film algae and stir the sand.
+          Introduce hardy, compatible fish that fit your tank size and aquascape—territory matters. Quarantine when you can;
+          prevention beats treatment in a display. When the tank is stable, place beginner corals low and let them tell you
+          how they feel before you raise light or flow. Feed with intention: enough to nourish, not enough to pollute.
+          The best stocking plan is the one you can sustain week after week.
+        </p>
+        <div class="recap">
+          <h4>Recap</h4>
+          <ul>
+            <li>Order: CUC → hardy fish → beginner corals → expand slowly.</li>
+            <li>Mind compatibility, territory, and total capacity.</li>
+            <li>Quarantine when possible; feed deliberately.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="stage tab-panel" id="tab-care">
+      <div class="card">
+        <h3>Maintenance & Upgrades</h3>
+        <p>
+          Reefing thrives on rhythm. Each week, test nitrate and phosphate, clean the glass, and blow detritus from the rock.
+          Do water changes when nutrients drift or trace elements need refreshing. Each month, service pumps and skimmer,
+          replace or recharge media, and sanity-check heater accuracy. Add gear when it solves a real, repeating problem—like
+          a refugium to smooth nutrients or a dosing pump to hold alkalinity steady. Upgrades should make the tank <em>more</em>
+          stable, not more complicated. Change one thing at a time and let the system respond before changing anything else.
+        </p>
+        <div class="recap">
+          <h4>Recap</h4>
+          <ul>
+            <li>Weekly: NO₃/PO₄ test, glass clean, detritus blow-off, water change as needed.</li>
+            <li>Monthly+: clean pumps/skimmer; refresh carbon/media; verify heater/probes.</li>
+            <li>Upgrade only to increase stability; one change at a time.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Utility selectors
+    const $$ = s => Array.from(document.querySelectorAll(s));
+    const $ = s => document.querySelector(s);
+
+    // ---- THEME (match Builder + persist + back-button fix) ----
+(function(){
+  function preferredTheme(){
+    try {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark') return saved;
+    } catch(e){}
+    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      ? 'dark'
+      : 'light';
+  }
+
+  function applyTheme(theme){
+    document.documentElement.setAttribute('data-theme', theme);
+    const btn = $('#themeToggle');
+    if (btn) {
+      btn.setAttribute('aria-pressed', String(theme === 'dark'));
+      btn.textContent = theme === 'dark' ? '🌙 Dark' : '🌞 Light';
+    }
+  }
+
+  // Apply current preference on load
+  applyTheme(preferredTheme());
+
+  // Toggle + save to localStorage
+  $('#themeToggle')?.addEventListener('click', () => {
+    const cur  = document.documentElement.getAttribute('data-theme') || 'light';
+    const next = (cur === 'dark') ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem('theme', next); } catch(e){}
+  });
+
+  // Re-apply whenever page is shown (fixes back/forward cache)
+  window.addEventListener('pageshow', () => {
+    applyTheme(preferredTheme());
+  });
+})();
+
+
+
+    // Tab switching
+    const tabs = $$('#course-tabs .tab');
+    const panels = $$('.tab-panel');
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabs.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        panels.forEach(p => p.classList.remove('visible'));
+        const target = document.querySelector(btn.dataset.target);
+        target?.classList.add('visible');
+      });
+    });
+  </script>
+</body>
+</html>

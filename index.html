@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+  if (sessionStorage.getItem('reefAuth') !== 'ok') {
+    location.href = 'login.html';
+  }
+</script>
+  <meta name="robots" content="noindex, nofollow">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🪸 Reef Architect</title>
+    <!-- Load user theme before CSS -->
+  <script>
+    (function(){
+      try {
+        var saved = localStorage.getItem('theme');
+        var t = (saved==='dark'||saved==='light')
+          ? saved
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch(e){}
+    })();
+  </script>
+
+  <link rel="stylesheet" href="styles.css"/>
+
+  <link rel="stylesheet" href="styles.css"/>
+
+  <!-- keep inline helpers already used -->
+  <style>
+    .tooltip { position: relative; display: inline-flex; align-items: center; gap: .5rem; }
+    .tooltip .tooltip-text {
+      position: absolute; top: 125%; left: 0; max-width: 22rem; padding: .6rem .8rem;
+      border-radius: .5rem; background: rgba(0,0,0,.9); color:#fff; font-size: .9rem; line-height: 1.2rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,.25); opacity: 0; visibility: hidden; transform: translateY(4px);
+      transition: opacity .15s ease, transform .15s ease, visibility .15s; z-index: 9999; pointer-events: none;
+    }
+    .tooltip .tooltip-text::before {
+      content:""; position:absolute; top:-6px; left:12px; border-left:6px solid transparent; border-right:6px solid transparent; border-bottom:6px solid rgba(0,0,0,.9);
+    }
+    .tooltip:hover .tooltip-text, .tooltip:focus-within .tooltip-text { opacity:1; visibility:visible; transform:translateY(0); }
+    .tooltip .label-text:focus-visible { box-shadow: 0 0 0 2px #0ea5e9; border-radius: .25rem; }
+    .toggle input[type="radio"] { width: 1.1rem; height: 1.1rem; cursor: pointer; }
+    .muted { opacity:.7; }
+    .compat-list .ok { color: var(--good); }
+    .compat-list .caution { color: var(--warn); }
+    .compat-list .bad { color: var(--bad); }
+  </style>
+</head>
+<body>
+  <script>
+  if(sessionStorage.getItem("reefAuth") !== "ok"){
+    window.location.href = "login.html";
+  }
+</script>
+  <header class="topbar">
+    <div class="brand">
+      <h1>🪸 Reef Architect</h1>
+      <span class="subtitle">Plan • Build • Thrive</span>
+    </div>
+    <div class="controls">
+      <!-- Experience mode: Beginner / Experienced with hover tooltips -->
+      <div class="toggle" role="group" aria-label="Experience level">
+        <label class="tooltip">
+          <input type="radio" name="experience" id="expBeginner" checked />
+          <span class="label-text" tabindex="0">Beginner</span>
+          <div class="tooltip-text" role="tooltip">
+            Shows beginner-safe fish/corals and gear only. Hides advanced items (UV & reactors) and simplifies choices.
+          </div>
+        </label>
+        <label class="tooltip">
+          <input type="radio" name="experience" id="expExperienced" />
+          <span class="label-text" tabindex="0">Experienced</span>
+          <div class="tooltip-text" role="tooltip">
+            Full lists enabled, including advanced gear (UV & reactors) and species that need extra care.
+          </div>
+        </label>
+      </div>
+
+      <button id="openGlossary" class="icon-btn">Glossary</button>
+      <a href="crash-course.html" class="secondary">Crash Course</a>
+<a href="about.html" class="secondary">About</a>
+<a href="contact.html" class="secondary">Contact</a>
+      <button id="themeToggle" class="secondary" aria-pressed="false" title="Toggle light/dark">🌗 Theme</button>
+
+      <div class="export-group">
+        <button id="exportPortrait" class="secondary">Export → PDF (Portrait)</button>
+        <button id="exportLandscape" class="secondary">Export → PDF (Landscape)</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="app">
+    <section id="stage-tabs" class="tabs">
+      <button class="tab active" data-stage="0">Welcome</button>
+      <button class="tab" data-stage="1">1. Tank & Equipment</button>
+      <button class="tab" data-stage="2">2. Fish & Inverts</button>
+      <button class="tab" data-stage="3">3. Corals</button>
+      <button class="tab" data-stage="4">4. Summary</button>
+    </section>
+
+    <!-- Welcome -->
+    <section id="stage-0" class="stage visible">
+      <div class="card">
+        <h2>Welcome to Reef Architect</h2>
+        <p>
+  Build your reef step-by-step with volume-aware gear picks, capacity guidance, and compatibility notes.
+  If you’re brand new, use our <a href="crash-course.html" class="link">Crash Course into Reefing</a> for a quick,
+  eight-phase overview of planning, setup, cycling, stocking, and care—then come back here to build with confidence.
+</p>
+
+        <ul>
+          <li><b>Beginner</b> mode keeps choices simple and safe. <b>Experienced</b> unlocks everything.</li>
+          <li>Equipment lists auto-filter to your tank volume.</li>
+          <li>Stocking “<b>Capacity</b>” meter helps avoid overcrowding.</li>
+          <li>Summary includes color-coded compatibility notes and suggestions.</li>
+        </ul>
+        <button id="startBtn" class="primary">Start →</button>
+	<a href="crash-course.html" class="secondary icon-btn">Crash Course →</a>
+      </div>
+
+      <!-- Quick Start on Welcome -->
+      <section class="card" id="quickStart">
+        <h2>Just do it for me</h2>
+        <div class="grid grid-5">
+          <div class="qs-card">
+            <h3>20g Softie Nano</h3><p>Low-maintenance corals and peaceful fish.</p>
+            <button class="primary" onclick="applyQuickStart('nano20')">Go →</button>
+          </div>
+          <div class="qs-card">
+            <h3>32g BioCube Softie</h3><p>Classic AIO starter with soft corals.</p>
+            <button class="primary" onclick="applyQuickStart('biocube32')">Go →</button>
+          </div>
+          <div class="qs-card">
+            <h3>40g Mixed Reef</h3><p>Balanced LPS/Softies with moderate gear.</p>
+            <button class="primary" onclick="applyQuickStart('mixed40')">Go →</button>
+          </div>
+          <div class="qs-card">
+            <h3>75g FOWLR</h3><p>Fish-focused setup, simple lighting needs.</p>
+            <button class="primary" onclick="applyQuickStart('fowlr75')">Go →</button>
+          </div>
+          <div class="qs-card">
+            <h3>90g LPS Reef</h3><p>Roomy tank with moderate flow & light.</p>
+            <button class="primary" onclick="applyQuickStart('lps90')">Go →</button>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- Stage 1 -->
+    <section id="stage-1" class="stage">
+      <h2>Stage 1 — Tank, Sump & Equipment</h2>
+      <!-- Reoriented: two columns; Tank+Sump on first row, Lighting+Flow below -->
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Tank</h3>
+          <div class="row"><label>Preset Tank</label><select id="tankPreset"></select></div>
+          <div class="row"><label>Build Name</label><input id="buildName" placeholder="e.g., 40g Mixed Beginner"/></div>
+          <div class="row"><label>Build Type</label>
+            <select id="buildType">
+              <option value="mixed" selected>Mixed Reef</option>
+              <option value="sps">SPS-dominant</option>
+              <option value="lps">LPS-dominant</option>
+              <option value="softie">Softie/Zoas</option>
+              <option value="fowlr">FOWLR</option>
+            </select>
+          </div>
+          <div class="row"><label>Length (in)</label><input id="lenIn" type="number" min="1" value="24"/></div>
+          <div class="row"><label>Width (in)</label><input id="widIn" type="number" min="1" value="18"/></div>
+          <div class="row"><label>Height (in)</label><input id="heiIn" type="number" min="1" value="18"/></div>
+          <div class="row"><label>Displacement %</label><input id="displacementPct" type="number" min="0" max="50" value="10"/></div>
+          <div id="tankGallonsNote" class="muted small" style="margin-top:6px;" aria-live="polite"></div>
+</div>
+
+        <div class="card">
+          <h3>Sump</h3>
+          <div class="row"><label>Use Sump?</label>
+            <select id="useSump">
+              <option value="yes" selected>Yes</option>
+              <option value="no">No (AIO/Canister)</option>
+            </select>
+          </div>
+          <div class="row"><label>Sump Model</label><select id="sumpModel"></select></div>
+          <div class="row"><label>Sump Volume (gal)</label><input id="sumpGallons" type="number" min="0" value="20"/></div>
+          <div class="row"><label>Skimmer Chamber Depth (in)</label><input id="skimmerWaterDepth" type="number" min="4" value="8"/></div>
+          <div class="row"><label>Chamber (W×L in)</label>
+            <input id="skimmerChamW" type="number" min="0" value="10" style="max-width:100px"/> ×
+            <input id="skimmerChamL" type="number" min="0" value="12" style="max-width:100px"/>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Lighting</h3>
+          <div class="row"><label>Fixture</label><select id="lighting"></select></div>
+          <div class="row"><label>Fixture Count</label><input id="lightCount" type="number" min="1" value="1"/></div>
+        </div>
+
+        <div class="card">
+          <h3>Flow / Filtration / Heat</h3>
+          <div class="row"><label>Return Pump</label><select id="returnPump"></select></div>
+          <div class="row"><label>Powerhead Model</label><select id="powerhead"></select></div>
+          <div class="row"><label>Powerhead Count</label><input id="powerheadCount" type="number" min="0" value="1"/></div>
+          <div class="row"><label>Skimmer</label><select id="skimmer"></select></div>
+          <div class="row"><label>Heater Model</label><select id="heater"></select></div>
+          <div class="row"><label>Heater Count</label><input id="heaterCount" type="number" min="1" value="1"/></div>
+          <hr class="muted"/>
+          <div class="row"><label>UV Sterilizer <span class="muted" id="uvNote"></span></label><select id="uvSterilizer"></select></div>
+          <div class="row"><label>ATO System</label><select id="atoSystem"></select></div>
+          <div class="row"><label>Media Reactor <span class="muted" id="reactorNote"></span></label><select id="mediaReactor"></select></div>
+        </div>
+      </div>
+<div class="card">
+  <h3>Budget</h3>
+  <div id="budgetNow" class="metrics"></div>
+</div>
+
+      <div class="card">
+        <h3>Fit & Sizing Check</h3>
+        <div id="calcResults" class="metrics"></div>
+        <div id="fitResults" class="metrics"></div>
+      </div>
+
+      <div class="nav-row">
+  <button class="secondary restart-btn">⟳ Restart</button>
+  <button class="next-btn" data-next="2">Next →</button>
+</div>
+    </section>
+
+    <!-- Stage 2 -->
+    <section id="stage-2" class="stage">
+      <h2>Stage 2 — Fish & Invertebrates</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Add Species</h3>
+          <div class="row"><label>Species</label><select id="fishSelect"></select></div>
+          <div class="row"><label>Qty</label><input id="fishQty" type="number" min="1" value="1"/></div>
+          <button id="addFish" class="primary">Add</button>
+        </div>
+        <div class="card">
+          <h3>Current Stock</h3>
+          <ul id="stockList" class="list"></ul>
+          <div class="metrics" id="fishMetrics"></div>
+          <div class="meter"><div id="capacityBar"></div></div>
+          <div id="capacityNote" class="small muted"></div>
+        </div>
+      </div>
+      <div class="nav-row">
+  <button class="secondary restart-btn">⟳ Restart</button>
+  <button class="next-btn" data-next="3">Next →</button>
+</div>
+    </section>
+
+    <!-- Stage 3 -->
+    <section id="stage-3" class="stage">
+      <h2>Stage 3 — Corals</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Add Coral</h3>
+          <div class="row"><label>Coral</label><select id="coralSelect"></select></div>
+          <div class="row"><label>Qty</label><input id="coralQty" type="number" min="1" value="1"/></div>
+          <button id="addCoral" class="primary">Add</button>
+        </div>
+        <div class="card">
+          <h3>Coral Plan</h3>
+          <ul id="coralList" class="list"></ul>
+          <div class="metrics" id="coralMetrics"></div>
+	  <div class="meter"><div id="parBar"></div></div>
+	  <div id="parNote" class="small muted"></div>
+	  <div class="meter"><div id="flowBar"></div></div>
+<div id="flowNote" class="small muted"></div>
+
+<table id="reefRanges" class="mini">
+  <thead>
+    <tr><th>Build</th><th>Flow×</th><th>PAR</th></tr>
+  </thead>
+  <tbody id="reefRangesBody"></tbody>
+</table>
+
+        </div>
+      </div>
+      <div class="nav-row">
+  <button class="secondary restart-btn">⟳ Restart</button>
+  <button class="next-btn" data-next="4">Next →</button>
+</div>
+    </section>
+
+    <!-- Stage 4 -->
+    <section id="stage-4" class="stage">
+      <h2>Summary</h2>
+<div class="card">
+  <h3>Budget Summary</h3>
+  <div id="budgetSummary"></div>
+</div>
+      <div id="summary" class="card"></div>
+      <div class="nav-row">
+  <button class="secondary restart-btn">⟳ Restart</button>
+</div>
+    </section>
+  </main>
+
+  <!-- Glossary Modal (fixed overlay, hidden by default) -->
+  <div id="glossaryModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Glossary (Beginner)</h3>
+        <button id="closeGlossary" class="icon-btn">Close</button>
+      </div>
+      <div class="modal-body">
+        <ul>
+          <li><b>PAR</b>: Light intensity for coral growth.</li>
+          <li><b>Turnover</b>: Return pump gph ÷ tank gallons (aim 3–5×).</li>
+          <li><b>Circulation</b>: Flow from powerheads + return (varies by coral type).</li>
+          <li><b>Sump</b>: Separate filter box under the tank; adds water volume and hides gear.</li>
+          <li><b>AIO</b>: All-in-one tank with rear filter compartment (no external sump).</li>
+          <li><b>W/gal</b>: Heater watts per gallon (target ~3–5).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span>Reef Architect v11 — © 2025</span>
+  </footer>
+
+  <script src="data_species.js"></script>
+  <script src="data_equipment.js"></script>
+  <script src="data_tanks.js"></script>
+  <script src="matrix_starter.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
