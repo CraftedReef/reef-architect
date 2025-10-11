@@ -154,6 +154,37 @@ button.icon-btn {
   color: var(--text);
   border-radius: 10px; padding: 9px 12px; cursor: pointer;
 }
+/* --- CTA link button (for Crash Course in header) --- */
+a.cta {
+  background: var(--primary);
+  color: #fff !important;
+  border: 1px solid var(--primary-600);
+  border-radius: 10px;
+  padding: 8px 14px;
+  text-decoration: none;
+}
+a.cta:hover {
+  background: var(--primary-600);
+}
+
+/* Subtle clean-up for secondary header links */
+a.secondary {
+  border: 1px solid transparent;
+  color: var(--text);
+  padding: 8px 12px;
+  text-decoration: none;
+}
+a.secondary:hover { border-color: var(--outline); }
+
+/* Brand polish */
+.brand h1 { font-size: 1.4rem; }
+.brand .subtitle { font-size: .9rem; letter-spacing: .5px; }
+
+/* Header stacking on narrow screens */
+@media (max-width: 700px) {
+  .topbar { flex-direction: column; align-items: flex-start; gap: .5rem; }
+  .controls { flex-wrap: wrap; }
+}
 .icon-btn + .icon-btn,
 .primary + .icon-btn,
 .primary + .secondary {

@@ -33,5 +33,14 @@
       }
     }
   </script>
+<script>
+  // Make sure the login button sets the session flag then returns to the site
+  document.getElementById('loginForm')?.addEventListener('submit', function(e){
+    e.preventDefault();
+    sessionStorage.setItem('reefAuth', 'ok');
+    // go to home by default; users can then click Review
+    location.href = 'index.html';
+  });
+</script>
 </body>
 </html>

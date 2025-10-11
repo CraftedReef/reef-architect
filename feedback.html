@@ -41,7 +41,7 @@
     </div>
     <nav class="controls">
       <a href="index.html" class="secondary">Home</a>
-      <a href="crash-course.html" class="secondary">Crash Course</a>
+      <a href="crash-course.html" class="cta">Crash Course</a>
       <a href="about.html" class="secondary">About</a>
       <a href="contact.html" class="secondary">Contact</a>
       <a href="feedback.html" class="secondary">Review</a>
@@ -281,20 +281,80 @@
         console.error('PDF error', err);
       }
 
-      // 2) Send email via EmailJS (text of the submission)
-      try {
-        // Replace with your Service ID and Template ID:
-        const SERVICE_ID = "smorales153@gmail.com";
-        const TEMPLATE_ID = "template_70jp328";
+// 2) Send email via EmailJS (try with PDF attachment; fallback to text-only)
+try {
+  const SERVICE_ID = "service_xxxxxxxx";     // <-- your real Service ID
+  const TEMPLATE_ID = "template_70jp328";    // <-- your real Template ID
 
-        await emailjs.send(SERVICE_ID, TEMPLATE_ID, params);
-        form.style.display = 'none';
-        document.getElementById('thankyou').style.display = 'block';
-      } catch (e2) {
-        console.error(e2);
-        alert('Email send error — please try again.');
-      }
+  // Build a filename and a base64 string for the PDF we already generated
+  const fileName = (()=>{
+    const nameSafe = (params.name || 'Anonymous').toString().replace(/[^a-z0-9_\-]+/gi,'_');
+    const ts = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
+    return `ReefArchitect_Review_${nameSafe}_${ts}.pdf`;
+  })();
+
+  // jsPDF: get a base64 string of the PDF (no prefix)
+  const pdfDataUri = window.jspdf?.jsPDF ? null : null; // guard (jsPDF already loaded)
+  // Recreate the PDF to capture as base64 without changing the already-downloaded file
+  const { jsPDF } = window.jspdf;
+  const reDoc = new jsPDF({ unit: 'pt', format: 'letter' });
+  // (Re-print the same blocks for the attachment)
+  const margin2 = 54; let y2 = margin2;
+  reDoc.setFont('helvetica','bold'); reDoc.setFontSize(16);
+  reDoc.text('Reef Architect — Site Review', margin2, y2); y2 += 22;
+  reDoc.setFont('helvetica','normal'); reDoc.setFontSize(10);
+  reDoc.text(`Submitted: ${params.submitted_at}`, margin2, y2); y2 += 18;
+  function writeBlock(h, v){
+    reDoc.setFont('helvetica','bold'); reDoc.text(h, margin2, y2); y2 += 14;
+    reDoc.setFont('helvetica','normal');
+    const txt = (v || '—') + '';
+    const lines = reDoc.splitTextToSize(txt, 504);
+    lines.forEach(line=>{ reDoc.text(line, margin2, y2); y2 += 12; });
+    y2 += 6;
+    if(y2 > 700){ reDoc.addPage(); y2 = margin2; }
+  }
+  writeBlock('Name', params.name);
+  writeBlock('Email', params.email);
+  writeBlock('Role', params.role);
+  writeBlock('Device', params.device);
+  writeBlock('Visit Length', params.visit_length);
+  writeBlock('Sections Used', params.sections_used);
+  writeBlock('UI Clarity (1–5)', params.ui_clarity);
+  writeBlock('Mobile Usability (1–5)', params.mobile_usability);
+  writeBlock('Performance (1–5)', params.performance);
+  writeBlock('Content Helpfulness (1–5)', params.content_helpfulness);
+  writeBlock('Recommend (0–10)', params.nps);
+  writeBlock('Bugs', params.bugs);
+  writeBlock('Top Improvements', params.top_improvements);
+  writeBlock('Loved', params.loved);
+  writeBlock('Other', params.other);
+  writeBlock('Follow Up OK', params.follow_up_ok);
+  writeBlock('Quote OK', params.quote_ok);
+
+  const base64NoPrefix = reDoc.output('datauristring').split(',')[1];
+
+  let sent = false;
+  try {
+    // Some EmailJS plans support base64 attachments via the `attachments` param.
+    await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+      ...params,
+      attachments: [{
+        name: fileName,
+        data: base64NoPrefix
+      }]
     });
-  </script>
-</body>
-</html>
+    sent = true;
+  } catch (attachErr) {
+    console.warn('Attachment send failed, falling back to text-only email', attachErr);
+  }
+
+  if (!sent) {
+    await emailjs.send(SERVICE_ID, TEMPLATE_ID, params);
+  }
+
+  form.style.display = 'none';
+  document.getElementById('thankyou').style.display = 'block';
+} catch (e2) {
+  console.error(e2);
+  alert('Email send error — please try again.');
+}
