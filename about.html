@@ -57,5 +57,41 @@
   });
 })();
 </script>
+<!-- Glossary Modal -->
+<div id="glossaryModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="glossaryTitle">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="glossaryTitle">Reef Glossary</h3>
+      <button id="closeGlossary" class="secondary">Close</button>
+    </div>
+    <div class="modal-body">
+      <h4>Coral Families</h4>
+      <ul>
+        <li><b>Soft Corals</b> — Leathers, Zoas, Mushrooms.</li>
+        <li><b>LPS</b> — Large-Polyp Stony (Hammers, Duncans).</li>
+        <li><b>SPS</b> — Small-Polyp Stony (Acropora, Montipora).</li>
+      </ul>
+      <h4>Core Terms</h4>
+      <ul>
+        <li><b>PAR</b> — Light at coral height; target depends on corals.</li>
+        <li><b>Turnover</b> — Return pump flow ÷ tank gallons (~3–5×/hr).</li>
+        <li><b>Total Flow</b> — (Return + Powerheads) ÷ gallons.</li>
+        <li><b>ATO</b> — Auto Top-Off controls salinity.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<script>
+  // Minimal open/close wiring for this page
+  document.getElementById('openGlossary')?.addEventListener('click', ()=> {
+    document.getElementById('glossaryModal')?.classList.remove('hidden');
+  });
+  document.getElementById('closeGlossary')?.addEventListener('click', ()=> {
+    document.getElementById('glossaryModal')?.classList.add('hidden');
+  });
+  document.getElementById('glossaryModal')?.addEventListener('click', (e)=> {
+    if (e.target.id === 'glossaryModal') e.currentTarget.classList.add('hidden');
+  });
+</script>
 </body>
 </html>

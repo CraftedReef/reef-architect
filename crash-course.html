@@ -61,11 +61,13 @@
     </div>
     <div class="controls">
       <a href="index.html" class="secondary">← Aquarium Builder</a>
+      <button id="openGlossary" class="icon-btn">Glossary</button>
       <button id="themeToggle" class="secondary" aria-pressed="false" title="Toggle light/dark">🌗 Theme</button>
     </div>
   </header>
 
   <main id="app">
+ </section>
     <section class="course-hero">
       <h2>Crash Course into Reefing</h2>
        <p>
@@ -74,8 +76,37 @@
   Think of this as a guide, not a complete class. We recommend exploring each topic in more depth before you start your build.
   Follow the order. Take your time. Stability beats speed.
 </p>
+<section class="card">
+  <h2>Before You Start: What is an Aquarium System?</h2>
+  <p>
+    A reef system is a box of water with controlled <b>flow</b> and <b>filtration</b>,
+    heated to a stable temperature, and lit so corals can photosynthesize.
+    Each tab starts with <i>why</i> it matters, then shows <i>how</i> to choose.
+  </p>
 
-    </section>
+  <div class="sys-diagram" aria-label="Diagram of a reef system">
+    <div class="sd-row">
+      <div class="sd-box">Display Tank<br><span>Corals + Fish</span></div>
+      <div class="sd-arrow">⬅︎ return&nbsp;&nbsp;|&nbsp;&nbsp;overflow ➡︎</div>
+      <div class="sd-box">Sump<br><span>Skimmer • Heater • Return Pump</span></div>
+    </div>
+    <div class="sd-row">
+      <div class="sd-chip">Powerheads = In-tank Flow</div>
+      <div class="sd-chip">Lighting = PAR for Corals</div>
+      <div class="sd-chip">ATO = Evaporation Control</div>
+    </div>
+  </div>
+</section>
+<section class="card">
+  <h2>Quick Terms You’ll See</h2>
+  <ul class="list">
+    <li><b>Soft Corals</b> — Leathers, Zoas, Mushrooms. Forgiving and great for beginners.</li>
+    <li><b>LPS</b> (Large-Polyp Stony) — Hammers, Frogspawns, Duncans. Moderate light/flow.</li>
+    <li><b>SPS</b> (Small-Polyp Stony) — Acropora, Montipora. High stability + light/flow.</li>
+    <li><b>PAR</b> — Light intensity at coral height. Mixed reefs ~120–250; SPS 250–350+.</li>
+    <li><b>Turnover</b> — Return pump flow ÷ tank gallons (target ~3–5×/hr).</li>
+  </ul>
+</section>
 
     <!-- Tabs -->
     <section class="tabs" id="course-tabs">
@@ -93,6 +124,7 @@
     <section class="stage visible tab-panel" id="tab-plan">
       <div class="card">
         <h3>Plan & Gear</h3>
+<p class="section-why">Why this matters: planning locks in volume, budget, and format (AIO vs sump) so every later choice fits and cables/plumbing have a clean path.</p>
         <p>
           Start by defining your destination. A 20–40 gallon AIO makes a forgiving first reef:
           enough water volume to buffer mistakes, compact enough to manage. Decide early whether you’ll run an AIO or a sump;
@@ -115,6 +147,7 @@
     <section class="stage tab-panel" id="tab-water">
       <div class="card">
         <h3>Water & Salt</h3>
+<p class="section-why">Why this matters: pure water and consistent salt mix prevent early algae problems and keep chemistry predictable for corals.</p>
         <p>
           Great reefs start with great water. Use RODI to bring total dissolved solids near zero; this prevents nuisance algae
           and unpredictability. Mix your chosen salt to 35 ppt (1.025–1.026 SG) and stick with it—consistency is kinder to corals
@@ -136,6 +169,7 @@
     <section class="stage tab-panel" id="tab-setup">
       <div class="card">
         <h3>Setup Day</h3>
+<p class="section-why">Why this matters: smart layout and leak-check on day one saves headaches later and protects livestock when you add it.</p>
         <p>
           Dry-fit everything before a drop of water touches the glass. Level the stand, set the tank, and confirm the aquascape
           is rock-solid—push on it from different angles. Rinse sand until the water runs mostly clear. Fill with mixed saltwater,
@@ -157,6 +191,7 @@
     <section class="stage tab-panel" id="tab-cycle">
       <div class="card">
         <h3>Cycle & First Tests</h3>
+<p class="section-why">Why this matters: the nitrogen cycle makes the tank safe for life. Rushing this step kills fish and stalls progress.</p>
         <p>
           Seed the tank with bottled bacteria and an ammonia source, then watch the nitrogen story unfold.
           Ammonia rises first, nitrite follows, and nitrate appears last. Test every few days and be patient.
@@ -178,6 +213,7 @@
     <section class="stage tab-panel" id="tab-flow">
       <div class="card">
         <h3>Flow, Filtration & Nutrients</h3>
+<p class="section-why">Why this matters: flow keeps detritus suspended for removal and delivers oxygen to corals. Target total in-tank flow of <b>10–20×</b> (soft/LPS) or <b>30–60×</b> (SPS).</p>
         <p>
           Corals breathe with your flow. Aim for broad, randomized movement that sweeps detritus off the rock and
           keeps water exchanging across coral surfaces without blasting tissue. Mechanical filtration (floss or socks)
@@ -200,6 +236,7 @@
     <section class="stage tab-panel" id="tab-light">
       <div class="card">
         <h3>Lighting & PAR On-Ramp</h3>
+<p class="section-why">Why this matters: corals photosynthesize. Proper PAR and a slow ramp prevent bleaching while still fueling growth.</p>
         <p>
           Light is food for corals—and too much, too fast, burns them. Start low and ramp up slowly.
           Target ranges (as general guides): softies under ~100–150 PAR, many LPS around ~75–200 PAR,
@@ -221,6 +258,7 @@
     <section class="stage tab-panel" id="tab-stock">
       <div class="card">
         <h3>Stocking & Acclimation</h3>
+<p class="section-why">Why this matters: stocking order and quarantine reduce aggression and disease, protecting your investment.</p>
         <p>
           Add life in a calm, deliberate sequence. Start with a modest clean-up crew to graze film algae and stir the sand.
           Introduce hardy, compatible fish that fit your tank size and aquascape—territory matters. Quarantine when you can;
@@ -242,6 +280,7 @@
     <section class="stage tab-panel" id="tab-care">
       <div class="card">
         <h3>Maintenance & Upgrades</h3>
+<p class="section-why">Why this matters: small, regular habits keep nutrients stable and equipment reliable so corals thrive long-term.</p>
         <p>
           Reefing thrives on rhythm. Each week, test nitrate and phosphate, clean the glass, and blow detritus from the rock.
           Do water changes when nutrients drift or trace elements need refreshing. Each month, service pumps and skimmer,
@@ -319,5 +358,42 @@
       });
     });
   </script>
+<!-- Glossary Modal -->
+<div id="glossaryModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="glossaryTitle">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="glossaryTitle">Reef Glossary</h3>
+      <button id="closeGlossary" class="secondary">Close</button>
+    </div>
+    <div class="modal-body">
+      <h4>Coral Families</h4>
+      <ul>
+        <li><b>Soft Corals</b> — Leathers, Zoas, Mushrooms.</li>
+        <li><b>LPS</b> — Large-Polyp Stony (Hammers, Duncans).</li>
+        <li><b>SPS</b> — Small-Polyp Stony (Acropora, Montipora).</li>
+      </ul>
+      <h4>Core Terms</h4>
+      <ul>
+        <li><b>PAR</b> — Light at coral height; target depends on corals.</li>
+        <li><b>Turnover</b> — Return pump flow ÷ tank gallons (~3–5×/hr).</li>
+        <li><b>Total Flow</b> — (Return + Powerheads) ÷ gallons.</li>
+        <li><b>ATO</b> — Auto Top-Off controls salinity.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Minimal open/close wiring for this page
+  document.getElementById('openGlossary')?.addEventListener('click', ()=> {
+    document.getElementById('glossaryModal')?.classList.remove('hidden');
+  });
+  document.getElementById('closeGlossary')?.addEventListener('click', ()=> {
+    document.getElementById('glossaryModal')?.classList.add('hidden');
+  });
+  document.getElementById('glossaryModal')?.addEventListener('click', (e)=> {
+    if (e.target.id === 'glossaryModal') e.currentTarget.classList.add('hidden');
+  });
+</script>
 </body>
 </html>

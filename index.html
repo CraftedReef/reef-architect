@@ -150,6 +150,18 @@
     <!-- Stage 1 -->
     <section id="stage-1" class="stage">
       <h2>Stage 1 — Tank, Sump & Equipment</h2>
+<section class="card">
+  <h2>Guided Setup (Beginner)</h2>
+  <ol class="list" style="list-style: decimal inside;">
+    <li>Pick a <b>Tank size or Preset</b></li>
+    <li>We’ll size your <b>Return Pump</b> and suggest <b>Powerheads</b> for flow.</li>
+    <li>We’ll suggest a <b>Light Count</b> for coverage. You can tune it.</li>
+    <li>Optionally add a <b>Skimmer</b> for larger/heavier systems.</li>
+    <li>Check <b>Fit &amp; Sizing</b> (notes auto-update as you change things).</li>
+  </ol>
+  <div class="muted small">Tip: Beginner hides advanced gear (UV/Reactors) to reduce noise. Switch to Advanced any time.</div>
+</section>
+
       <!-- Reoriented: two columns; Tank+Sump on first row, Lighting+Flow below -->
       <div class="grid grid-2">
         <div class="card">
@@ -158,11 +170,12 @@
           <div class="row"><label>Build Name</label><input id="buildName" placeholder="e.g., 40g Mixed Beginner"/></div>
           <div class="row"><label>Build Type</label>
             <select id="buildType">
-              <option value="mixed" selected>Mixed Reef</option>
-              <option value="sps">SPS-dominant</option>
-              <option value="lps">LPS-dominant</option>
-              <option value="softie">Softie/Zoas</option>
-              <option value="fowlr">FOWLR</option>
+              <option value="mixed" selected>Mixed Reef (Soft/LPS/SPS)</option>
+	      <option value="sps">SPS (Small-Polyp Stony)</option>
+	      <option value="lps">LPS (Large-Polyp Stony)</option>
+	      <option value="softie">Softies/Zoas (Soft Corals)</option>
+	      <option value="fowlr">FOWLR (Fish Only with Live Rock)</option>
+
             </select>
           </div>
           <div class="row"><label>Length (in)</label><input id="lenIn" type="number" min="1" value="24"/></div>
@@ -191,18 +204,64 @@
 
         <div class="card">
           <h3>Lighting</h3>
-          <div class="row"><label>Fixture</label><select id="lighting"></select></div>
-          <div class="row"><label>Fixture Count</label><input id="lightCount" type="number" min="1" value="1"/></div>
-        </div>
+          <div class="row"><label>Fixture</label>
+  <div>
+    <select id="lighting"></select>
+    <div class="muted small">Provides PAR for corals. Cubes ≤24″ usually use one puck-style light.</div>
+  </div>
+</div>
+<div class="row"><label>Fixture Count</label>
+  <div>
+    <input id="lightCount" type="number" min="1" value="1"/>
+    <div class="muted small">How many fixtures. We suggest a safe starting count; adjust for coverage.</div>
+  </div>
+</div>
+
 
         <div class="card">
           <h3>Flow / Filtration / Heat</h3>
-          <div class="row"><label>Return Pump</label><select id="returnPump"></select></div>
-          <div class="row"><label>Powerhead Model</label><select id="powerhead"></select></div>
-          <div class="row"><label>Powerhead Count</label><input id="powerheadCount" type="number" min="0" value="1"/></div>
-          <div class="row"><label>Skimmer</label><select id="skimmer"></select></div>
-          <div class="row"><label>Heater Model</label><select id="heater"></select></div>
-          <div class="row"><label>Heater Count</label><input id="heaterCount" type="number" min="1" value="1"/></div>
+          <div class="row"><label>Return Pump</label>
+  <div>
+    <select id="returnPump"></select>
+    <div class="muted small">Feeds water from sump to tank. Aim ~3–5× tank volume per hour.</div>
+  </div>
+</div>
+
+<div class="row"><label>Powerhead Model</label>
+  <div>
+    <select id="powerhead"></select>
+    <div class="muted small">Creates in-tank circulation. Together with the return, hit the flow target in Fit &amp; Sizing.</div>
+  </div>
+</div>
+
+<div class="row"><label>Powerhead Count</label>
+  <div>
+    <input id="powerheadCount" type="number" min="0" value="1"/>
+    <div class="muted small">Two smaller pumps often give better, variable flow than one large pump.</div>
+  </div>
+</div>
+
+<div class="row"><label>Skimmer</label>
+  <div>
+    <select id="skimmer"></select>
+    <div class="muted small">Removes organics. Optional for nanos; more valuable as tanks get larger/heavier.</div>
+  </div>
+</div>
+
+<div class="row"><label>Heater Model</label>
+  <div>
+    <select id="heater"></select>
+    <div class="muted small">Rule of thumb: ~3–5 W per gallon. Two smaller heaters + controller is safer.</div>
+  </div>
+</div>
+
+<div class="row"><label>Heater Count</label>
+  <div>
+    <input id="heaterCount" type="number" min="1" value="1"/>
+    <div class="muted small">Most builds use 1–2 heaters. Watch the watts/gal in Fit &amp; Sizing.</div>
+  </div>
+</div>
+
           <hr class="muted"/>
           <div class="row"><label>UV Sterilizer <span class="muted" id="uvNote"></span></label><select id="uvSterilizer"></select></div>
           <div class="row"><label>ATO System</label><select id="atoSystem"></select></div>
