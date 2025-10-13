@@ -1077,5 +1077,18 @@ function initExport(){
 }
 
 // Boot
+document.addEventListener("DOMContentLoaded", init);
 
-window.init = init;
+// Also keep the progressive Next → handler for any dynamically added buttons
+document.querySelectorAll(".next-btn").forEach(btn=>{
+  btn.addEventListener("click",(e)=>{
+    const nextStage=e.target.dataset.next;
+    if(!nextStage) return;
+    document.querySelectorAll(".stage").forEach(s=>s.classList.remove("visible"));
+    const next=$("#stage-"+nextStage); if(next) next.classList.add("visible");
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    const nextTab=document.querySelector(`.tab[data-stage='${nextStage}']`); if(nextTab) nextTab.classList.add("active");
+    window.scrollTo({ top:0, behavior:"smooth" });
+    if(nextStage==="4") renderSummary();
+  });
+});
