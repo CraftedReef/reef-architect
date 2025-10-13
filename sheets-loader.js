@@ -56,25 +56,26 @@ async function loadAllDataFromSheets(){
   const data = {};
 
   // ---- Equipment ----
-  data.LIGHTS        = await loadTab('Lights');
-  data.RETURN_PUMPS  = await loadTab('ReturnPumps');
-  data.POWERHEADS    = await loadTab('Powerheads');
-  data.SKIMMERS      = await loadTab('Skimmers');
-  data.HEATERS       = await loadTab('Heaters');
-  data.UVS           = await loadTab('UV');       // plural alias used by app.js
-  data.ATOS          = await loadTab('ATO');      // plural alias used by app.js
-  data.REACTORS      = await loadTab('Reactors');
-  data.UVS  = data.UV;
-  data.ATOS = data.ATO;
+data.LIGHTS        = await loadTab('Lights');
+data.RETURN_PUMPS  = await loadTab('ReturnPumps');
+data.POWERHEADS    = await loadTab('Powerheads');
+data.SKIMMERS      = await loadTab('Skimmers');
+data.HEATERS       = await loadTab('Heaters');
+data.UV            = await loadTab('UV');
+data.ATO           = await loadTab('ATO');
+data.REACTORS      = await loadTab('Reactors');
 
+// Legacy plural names expected by app.js
+data.UVS  = data.UV;
+data.ATOS = data.ATO;
 
-  // ---- Tanks ----
-  data.TANKS         = await loadTab('Tanks');
-  data.SUMPS         = await loadTab('Sumps');
+// ---- Tanks ----
+data.TANKS         = await loadTab('tanks');
+data.SUMPS         = await loadTab('sumps');
 
-  // ---- Livestock ----
-  data.FISH          = await loadTab('Fish');
-  data.CORALS        = await loadTab('Corals');
+// ---- Livestock ----
+data.FISH          = await loadTab('fish');
+data.CORALS        = await loadTab('corals');
 
   // Expose globals expected by app.js
   Object.assign(window, {
