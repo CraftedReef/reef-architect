@@ -55,31 +55,42 @@ async function loadTab(key){
 async function loadAllDataFromSheets(){
   const data = {};
 
-  // Equipment
-  data.LIGHTS      = await loadTab('lights');
-  data.SKIMMERS    = await loadTab('skimmers');
-  data.RETURN_PUMPS = await loadTab('returnPumps'); 
-  data.RETURNPUMPS  = data.RETURN_PUMPS;           
-  data.POWERHEADS  = await loadTab('powerheads');
-  data.HEATERS     = await loadTab('heaters');
-  data.UV          = await loadTab('uv');
-  data.ATO         = await loadTab('ato');
-  data.REACTORS    = await loadTab('reactors');
+  // ---- Equipment ----
+  data.LIGHTS        = await loadTab('lights');
+  data.RETURN_PUMPS  = await loadTab('returnPumps');
+  data.POWERHEADS    = await loadTab('powerheads');
+  data.SKIMMERS      = await loadTab('skimmers');
+  data.HEATERS       = await loadTab('heaters');
+  data.UVS           = await loadTab('uv');       // plural alias used by app.js
+  data.ATOS          = await loadTab('ato');      // plural alias used by app.js
+  data.REACTORS      = await loadTab('reactors');
 
-  // Tanks
-  data.TANKS       = await loadTab('tanks');
-  data.SUMPS       = await loadTab('sumps');
+  // ---- Tanks ----
+  data.TANKS         = await loadTab('tanks');
+  data.SUMPS         = await loadTab('sumps');
 
-  // Livestock
-  data.FISH        = await loadTab('fish');
-  data.CORALS      = await loadTab('corals');
-  data.INVERTEBRATES = data.FISH; // alias for safety
+  // ---- Livestock ----
+  data.FISH          = await loadTab('fish');
+  data.CORALS        = await loadTab('corals');
 
-  // Expose as globals expected by app.js
-  Object.assign(window, data);
-  // Also keep a namespaced copy if you need it later
+  // Expose globals expected by app.js
+  Object.assign(window, {
+    LIGHTS:        data.LIGHTS,
+    RETURN_PUMPS:  data.RETURN_PUMPS,
+    POWERHEADS:    data.POWERHEADS,
+    SKIMMERS:      data.SKIMMERS,
+    HEATERS:       data.HEATERS,
+    UVS:           data.UVS,
+    ATOS:          data.ATOS,
+    REACTORS:      data.REACTORS,
+    TANKS:         data.TANKS,
+    SUMPS:         data.SUMPS,
+    FISH:          data.FISH,
+    CORALS:        data.CORALS
+  });
+
+  // Keep combined object too
   window.REEF_DATA = data;
-
   return data;
 }
 
