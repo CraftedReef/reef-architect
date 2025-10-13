@@ -64,6 +64,9 @@ async function loadAllDataFromSheets(){
   data.UVS           = await loadTab('uv');       // plural alias used by app.js
   data.ATOS          = await loadTab('ato');      // plural alias used by app.js
   data.REACTORS      = await loadTab('reactors');
+  data.UVS  = data.UV;
+  data.ATOS = data.ATO;
+
 
   // ---- Tanks ----
   data.TANKS         = await loadTab('tanks');
