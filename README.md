@@ -1,48 +1,132 @@
-# 🪸 Reef Architect — v11.1
+# 🪸 Reef Architect v11.4
 
-Beginner-friendly reef tank planner with volume-aware equipment filtering, sensible presets, capacity/compatibility guidance, and print-ready summaries.
-
----
-
-## What’s new in v11.1
-- **Budget calculator sync fix**  
-  Resolved a UI/state desync where repopulated selects could show one item while the budget used a stale one (e.g., Kessil showing $239 but subtotal using $599).
-- **Coral matrix polish**  
-  Normalizes more LPS labels (Euphyllia, galaxea, hydnophora) for clearer “OK / Caution / Incompatible” notes.
-
-## Headline features (v11)
-- **Volume-aware equipment lists** — Lighting, return, powerheads, skimmer, heater, UV, ATO, reactor all auto-filter to your tank gallons.
-- **Beginner vs Experienced modes** — Beginner hides advanced gear (UV/reactors) and risky species; Experienced shows the full catalog.
-- **Welcome tab + Quick Start** — One-click presets to preload realistic builds; “Start →” advances to Stage 1.
-- **Stage 1 layout** — Tank & Sump side-by-side with Flow/Filtration/Heat below for better space on smaller screens.
-- **Stage 2** — Fish/Inverts grouped by family and sorted A→Z. **Capacity** meter (replaces “Bioload”) to discourage crowding small tanks.
-- **Stage 3** — Corals grouped (Soft / LPS / SPS) and sorted A→Z. PAR ranges table included.
-- **Summary** — Color-coded compatibility comments + suggestions, plus a running budget summary.
-- **Crash Course** — Linked from header and Welcome; quick phase-based guide to planning & cycling.
-- **Glossary** — Modal with open/close buttons wired; beginner terms at a glance.
-- **Print exports** — Portrait/Landscape PDF-friendly layout with single click.
+An interactive web app for reef aquarium planning and equipment configuration.  
+This version (v11.4) pulls live data directly from Google Sheets to keep livestock, coral, and equipment lists easily updatable.
 
 ---
 
-## Project structure
-- `index.html` — App shell, tabs, Welcome/Quick Start, tooltips, glossary modal, export buttons.
-- `styles.css` — Theme, layout, buttons, cards, grids, modal, print tweaks.
-- `app.js` — State, rendering, filtering, budget, capacity meter, suggestions, exports.
-- `matrix_starter.js` — Coral family logic + species compatibility helper.
-- `data_equipment.js` — Gear catalog with gallon ranges, prices, beginner flags.
-- `data_species.js` — Fish, inverts, corals with groups, min gallons, tags.
-- `data_tanks.js` — Presets and model dimensions.
-- `crash-course.html` — Eight-phase quick guide.
+## 🚀 Features
+
+- Multi-stage builder: Tanks, Equipment, Fish & Inverts, Corals, and Summary  
+- Auto-sizing and compatibility checks  
+- Live Google Sheets integration for all datasets  
+- "Just do it for me" quick-build presets  
+- Beginner/advanced mode toggle  
+- Export to PDF summary  
+- Lightweight HTML, CSS, and JavaScript — no frameworks required  
 
 ---
 
-## Run locally
-Just open `index.html` in a browser.
+## 🧩 File Structure
 
-Or serve for cleaner PDF printing:
-```bash
-# macOS
-python3 -m http.server 5173
+ReefArchitect/
+├── index.html               # main app entry point
+├── about.html               # about page
+├── crash-course.html        # learning section
+├── contact.html             # contact page
+├── feedback.html            # user feedback form
+├── login.html               # password gate
+├── styles.css               # all styling
+├── app.js                   # main app logic
+├── sheets-config.js         # Google Sheets mapping + IDs
+├── sheets-loader.js         # fetches and parses sheet data
+├── data_species.js          # legacy data files (kept for fallback)
+├── data_equipment.js        # legacy data files (kept for fallback)
+├── data_tanks.js            # legacy data files (kept for fallback)
+├── matrix_starter.js        # startup animations
+└── /Images/                 # logos and assets
 
-# Windows
-py -m http.server 5173
+---
+
+## ⚙️ Setup & Usage
+
+### 1️⃣ Edit Google Sheets Access
+Each Google Sheet must be **shared as Viewer**:
+- In Google Sheets → click **Share** → set **Anyone with the link → Viewer**
+
+### 2️⃣ Confirm Tab Names
+Tab names inside each spreadsheet must match the configuration in  
+`sheets-config.js`:
+
+| Spreadsheet | Tabs |
+|--------------|------|
+| **Corals** | Coral |
+| **Species** | Fish |
+| **Equipment** | Lights, Skimmers, ReturnPumps, Powerheads, Heaters, UV, ATO, Reactors |
+| **Tanks** | Tanks, Sumps |
+
+### 3️⃣ Sheet IDs in `sheets-config.js`
+IDs are already set to your live Google Sheets:
+
+| Type | ID |
+|------|----|
+| Corals | 1FjHIah3paTJe9WokNTN1_94QxtdcmwXZBxIBmCd15ec |
+| Species | 1gUX2L_52lN15q1uQo9_1AfHBATd3xAEuLutAnLK_1dI |
+| Equipment | 1DwDdDr-1HyTUUj5MjeG_S7XuF_1fYv31A1mhVtLA41Q |
+| Tanks | 14J8feKqP56iLo8FuYkPmx2AOaPNCRHE__4iJ22Dvf84 |
+
+---
+
+## 🧠 How It Works
+
+1. `sheets-loader.js` requests each tab’s CSV through  
+   `https://docs.google.com/spreadsheets/d/[ID]/gviz/tq?tqx=out:csv&sheet=[TabName]`
+2. CSV data is parsed into JavaScript objects.
+3. The data is assigned to global variables (`LIGHTS`, `TANKS`, `FISH`, `CORALS`, etc.).
+4. Once all data loads, `init()` in `app.js` builds the interface dynamically.
+
+---
+
+## 🖥️ Local Testing
+
+Chrome blocks Google Sheet requests from `file://` URLs.  
+Use one of these methods instead:
+
+### Option 1 — VS Code Live Server
+1. Install the **Live Server** extension by Ritwick Dey.
+2. Open the project folder → right-click `index.html` → “Open with Live Server.”
+
+### Option 2 — Python (if installed)
+```
+cd path/to/ReefArchitect
+python -m http.server 5500
+```
+Visit: [http://localhost:5500](http://localhost:5500)
+
+---
+
+## 🌐 Deployment
+
+Works perfectly on **GitHub Pages** or **Netlify** — no backend required.
+
+1. Commit and push all files to your repository.  
+2. For GitHub Pages: enable Pages under **Settings → Pages → Deploy from branch**.  
+3. For Netlify: drag the folder into the dashboard or use `git push`.
+
+---
+
+## 🧰 Developer Notes
+
+- Keep only one `<script>` block at the bottom of `index.html`:
+  ```html
+  <script src="sheets-config.js"></script>
+  <script src="sheets-loader.js"></script>
+  <script src="app.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    try { await loadAllDataFromSheets(); }
+    catch(e){ console.error(e); alert('Check Google Sheet access.'); return; }
+    if (typeof window.init === 'function') window.init();
+  });
+  </script>
+  ```
+- Avoid calling `init()` manually in `app.js`; it runs only after the data loads.
+
+---
+
+## 🧾 License
+
+© 2025 **Reef Architect Project**  
+Created and maintained by **Sebastian A. Morales**
+
+Use, fork, and adapt freely for non-commercial reefing education and planning projects.

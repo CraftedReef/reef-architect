@@ -47,11 +47,7 @@
   </style>
 </head>
 <body>
-  <script>
-  if(sessionStorage.getItem("reefAuth") !== "ok"){
-    window.location.href = "login.html";
-  }
-</script>
+  </script>
   <header class="topbar">
     <div class="brand">
   <img src="Images/logo.png" alt="Reef Architect logo" style="height:40px; vertical-align:middle; border-radius:8px;">
@@ -377,14 +373,30 @@
     </div>
   </div>
 
-  <footer class="footer">
-    <span>Reef Architect v11 — © 2025</span>
-  </footer>
+<footer class="footer">
+  <span>Reef Architect v11.4 — © 2025</span>
+</footer>
 
-  <script src="data_species.js"></script>
-  <script src="data_equipment.js"></script>
-  <script src="data_tanks.js"></script>
-  <script src="matrix_starter.js"></script>
-  <script src="app.js"></script>
+<!-- Boot sequence: load Sheets → then init app -->
+<script src="sheets-config.js"></script>
+<script src="sheets-loader.js"></script>
+<script src="app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    await loadAllDataFromSheets(); // fills window.LIGHTS, TANKS, etc.
+  } catch (e) {
+    console.error(e);
+    alert('Could not load data from Google Sheets. Check Share→“Anyone with the link: Viewer”, tab names, and IDs.');
+    return;
+  }
+  if (typeof window.init === 'function') {
+    window.init();
+  } else {
+    console.error('app.js did not expose window.init');
+  }
+});
+</script>
 </body>
 </html>
+
