@@ -8,22 +8,22 @@ window.SHEETS_CACHE_MS = 2 * 60 * 1000;
 */
 window.SHEETS_TABS = {
   // Equipment
-  lights:       "Lights",
-  skimmers:     "Skimmers",
-  returnPumps:  "ReturnPumps",
-  powerheads:   "Powerheads",
-  heaters:      "Heaters",
-  uv:           "UV",
-  ato:          "ATO",
-  reactors:     "Reactors",
+  lights:       "lights",
+  skimmers:     "skimmers",
+  returnPumps:  "returnPumps",
+  powerheads:   "powerheads",
+  heaters:      "heaters",
+  uv:           "uv",
+  ato:          "ato",
+  reactors:     "reactors",
 
   // Tanks
-  tanks:        "Tanks",
-  sumps:        "Sumps",
+  tanks:        "tanks",
+  sumps:        "sumps",
 
   // Livestock
-  fish:         "Fish",
-  corals:       "Coral"   // <— Coral is its own tab in its own spreadsheet
+  fish:         "fish",
+  corals:       "coral"   // <— Coral is its own tab in its own spreadsheet
 };
 
 /*
@@ -42,8 +42,8 @@ window.SHEETS_SOURCES = {
   "Reactors":     "1DwDdDr-1HyTUUj5MjeG_S7XuF_1fYv31A1mhVtLA41Q",
 
   // Tanks (both tabs live in the Tanks spreadsheet)
-  "Tanks":        "14J8feKqP56iLo8FuYkPmx2AOaPNCRHE__4iJ22Dvf84",
-  "Sumps":        "14J8feKqP56iLo8FuYkPmx2AOaPNCRHE__4iJ22Dvf84",
+  "Tanks":        "14J8feKqP56iLo8FuYkPmx2AOaPNCRHE_4iJ22Dvf84",
+  "Sumps":        "14J8feKqP56iLo8FuYkPmx2AOaPNCRHE_4iJ22Dvf84",
 
   // Species (Fish tab lives in the Species spreadsheet)
   "Fish":         "1gUX2L_52lN15q1uQo9_1AfHBATd3xAEuLutAnLK_1dI",
