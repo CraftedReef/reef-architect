@@ -130,14 +130,14 @@ async function loadAllDataFromSheets(){
   const data = {};
 
   // ---- Equipment ----
-data.LIGHTS        = await loadTab('Lights');
-data.RETURN_PUMPS  = await loadTab('ReturnPumps');
-data.POWERHEADS    = await loadTab('Powerheads');
-data.SKIMMERS      = await loadTab('Skimmers');
-data.HEATERS       = await loadTab('Heaters');
-data.UV            = await loadTab('UV');
-data.ATO           = await loadTab('ATO');
-data.REACTORS      = await loadTab('Reactors');
+data.LIGHTS        = await loadTab('lights');
+data.RETURN_PUMPS  = await loadTab('returnPumps');
+data.POWERHEADS    = await loadTab('powerheads');
+data.SKIMMERS      = await loadTab('skimmers');
+data.HEATERS       = await loadTab('heaters');
+data.UV            = await loadTab('uv');
+data.ATO           = await loadTab('ato');
+data.REACTORS      = await loadTab('reactors');
 
 // Legacy plural names expected by app.js
 data.UVS  = data.UV;

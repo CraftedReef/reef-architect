@@ -8,22 +8,22 @@ window.SHEETS_CACHE_MS = 2 * 60 * 1000;
 */
 window.SHEETS_TABS = {
   // Equipment
-  lights:       "lights",
-  skimmers:     "skimmers",
-  returnPumps:  "returnPumps",
-  powerheads:   "powerheads",
-  heaters:      "heaters",
-  uv:           "uv",
-  ato:          "ato",
-  reactors:     "reactors",
+  lights:       "Lights",
+  skimmers:     "Skimmers",
+  returnPumps:  "ReturnPumps",
+  powerheads:   "Powerheads",
+  heaters:      "Heaters",
+  uv:           "UV",
+  ato:          "ATO",
+  reactors:     "Reactors",
 
   // Tanks
-  tanks:        "tanks",
-  sumps:        "sumps",
+  tanks:        "Tanks",
+  sumps:        "Sumps",
 
   // Livestock
-  fish:         "fish",
-  corals:       "coral"   // <— Coral is its own tab in its own spreadsheet
+  fish:         "Fish",
+  corals:       "Coral"   // <— Coral is its own tab in its own spreadsheet
 };
 
 /*
