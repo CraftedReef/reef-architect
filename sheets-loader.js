@@ -42,13 +42,87 @@ function parseCsv(csv){
     return obj;
   });
 }
+// ---- Normalizers ----
+const toBool = v => String(v).trim().toLowerCase() === 'true';
+const toNum  = v => (v===''||v==null) ? undefined : Number(String(v).replace(/[$,]/g,''));
+const splitRange = v => {
+  const m = String(v||'').match(/(-?\d+(?:\.\d+)?)\s*[-–]\s*(-?\d+(?:\.\d+)?)/);
+  return m ? [Number(m[1]), Number(m[2])] : [0,0];
+};
+
+// CORALS: convert parRange -> par[], booleans to real booleans, lowercase types
+function normalizeCoralRow(r){
+  return {
+    id: (r.id || r.ID || (r.name||'').toLowerCase().replace(/[^a-z0-9]+/g,'_')).trim(),
+    name: r.name || r.Name || '',
+    scientific: r.scientific || r.Scientific || '',
+    par: splitRange(r.parRange || r.PAR || ''),
+    aggression: (r.aggression||'').toLowerCase(),
+    sweepers: toBool(r.sweepers),
+    placement: (r.placement||'').toLowerCase(),
+    beginner: toBool(r.beginner),
+    coralType: (r.coralType || r.type || '').toLowerCase()
+  };
+}
+
+// Generic number coercion for common equipment fields (keeps unknown fields as-is)
+function normalizeEquipmentRow(r, numberKeys=[]){
+  const out = { ...r };
+  numberKeys.forEach(k => { if (k in out) out[k] = toNum(out[k]); });
+  // common booleans
+  if ('beginner' in out) out.beginner = toBool(out.beginner);
+  return out;
+}
 
 async function loadTab(key){
   const tabName = (window.SHEETS_TABS || {})[key];
   if (!tabName) throw new Error(`Unknown key "${key}" in SHEETS_TABS`);
   const url = csvUrl(key, tabName);
   const csv = await fetchCsv(url);
-  return parseCsv(csv);
+  const rows = parseCsv(csv);
+
+  switch (key) {
+    case 'corals':
+      return rows.map(normalizeCoralRow);
+
+    case 'lights':
+      return rows.map(r => normalizeEquipmentRow(r, ['coverageInches','parHigh','parMid','parLow','minG','maxG','priceUSD']));
+
+    case 'returnPumps':
+      return rows.map(r => normalizeEquipmentRow(r, ['maxGph','minG','maxG','priceUSD']));
+
+    case 'powerheads':
+      return rows.map(r => normalizeEquipmentRow(r, ['gph','minG','maxG','priceUSD']));
+
+    case 'skimmers':
+      // skimmer numbers commonly referenced by the app:
+      return rows.map(r => normalizeEquipmentRow(r, ['lightRatingG','heavyRatingG','airLph','minG','maxG','priceUSD']));
+
+    case 'heaters':
+      return rows.map(r => normalizeEquipmentRow(r, ['watts','minG','maxG','priceUSD']));
+
+    case 'uv':
+    case 'ato':
+    case 'reactors':
+      return rows.map(r => normalizeEquipmentRow(r, ['priceUSD']));
+
+    case 'tanks':
+      return rows; // app doesn’t need coercion here
+
+    case 'sumps':
+      return rows; // app parses strings for display
+
+    case 'fish':
+      // basic cleanup so beginner filter works; minGallons used for label only
+      return rows.map(r => ({ 
+        ...r, 
+        beginner: toBool(r.beginner), 
+        minGallons: toNum(r.minGallons) ?? r.minGallons 
+      }));
+
+    default:
+      return rows;
+  }
 }
 
 // Load everything your app expects and expose globals so legacy code works
