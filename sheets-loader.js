@@ -58,7 +58,8 @@ async function loadAllDataFromSheets(){
   // Equipment
   data.LIGHTS      = await loadTab('lights');
   data.SKIMMERS    = await loadTab('skimmers');
-  data.RETURNPUMPS = await loadTab('returnPumps');
+  data.RETURN_PUMPS = await loadTab('returnPumps'); 
+  data.RETURNPUMPS  = data.RETURN_PUMPS;           
   data.POWERHEADS  = await loadTab('powerheads');
   data.HEATERS     = await loadTab('heaters');
   data.UV          = await loadTab('uv');
