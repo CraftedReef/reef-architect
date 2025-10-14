@@ -79,7 +79,6 @@
       <button id="openGlossary" class="icon-btn">Glossary</button>
       <a href="crash-course.html" class="cta">Crash Course</a>
 <a href="about.html" class="secondary">About</a>
-<a href="contact.html" class="secondary">Contact</a>
 <a href="feedback.html" class="secondary">Review</a>
       <button id="themeToggle" class="secondary" aria-pressed="false" title="Toggle light/dark">🌗 Theme</button>
 
@@ -94,7 +93,10 @@
     <section id="stage-tabs" class="tabs">
       <button class="tab active" data-stage="0">Welcome</button>
       <button class="tab" data-stage="1">1. Tank & Equipment</button>
-      <button class="tab" data-stage="2">2. Fish & Inverts</button>
+      <button class="tab" data-stage="2">
+  2. Fish &amp; Inverts
+  <span id="animalsBadge" class="badge" aria-label="Total fish and inverts"></span>
+</button>
       <button class="tab" data-stage="3">3. Corals</button>
       <button class="tab" data-stage="4">4. Summary</button>
     </section>
@@ -280,8 +282,10 @@
       </div>
 
       <div class="nav-row">
-  <button class="secondary restart-btn">⟳ Restart</button>
-  <button class="next-btn" data-next="2">Next →</button>
+  <div style="margin-left:auto; display:flex; gap:.5rem">
+    <button class="primary back-btn" data-prev="0">← Back</button>
+    <button class="primary next-btn" data-next="2">Next →</button>
+  </div>
 </div>
     </section>
 
@@ -289,24 +293,42 @@
     <section id="stage-2" class="stage">
       <h2>Stage 2 — Fish & Invertebrates</h2>
       <div class="grid grid-2">
-        <div class="card">
-          <h3>Add Species</h3>
-          <div class="row"><label>Species</label><select id="fishSelect"></select></div>
-          <div class="row"><label>Qty</label><input id="fishQty" type="number" min="1" value="1"/></div>
-          <button id="addFish" class="primary">Add</button>
-        </div>
-        <div class="card">
-          <h3>Current Stock</h3>
-          <ul id="stockList" class="list"></ul>
-          <div class="metrics" id="fishMetrics"></div>
-          <div class="meter"><div id="capacityBar"></div></div>
-          <div id="capacityNote" class="small muted"></div>
-        </div>
-      </div>
-      <div class="nav-row">
-  <button class="secondary restart-btn">⟳ Restart</button>
-  <button class="next-btn" data-next="3">Next →</button>
+  <!-- LEFT COLUMN: stacked Fish then Inverts -->
+  <div>
+    <!-- Add Fish -->
+    <div class="card">
+      <h3>Add Fish</h3>
+      <div class="row"><label>Fish</label><select id="fishSelect"></select></div>
+      <div class="row"><label>Qty</label><input id="fishQty" type="number" min="1" value="1"/></div>
+      <button id="addFish" class="primary">Add Fish</button>
+    </div>
+
+    <!-- Add Inverts -->
+    <div class="card">
+      <h3>Add Inverts</h3>
+      <div class="row"><label>Clean-Up Crew</label><select id="invertSelect"></select></div>
+      <div class="row"><label>Qty</label><input id="invertQty" type="number" min="1" value="1"/></div>
+      <!-- Make this button match Add Fish -->
+      <button id="addInvert" class="primary">Add Inverts</button>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN: Current Stock -->
+  <div class="card">
+    <h3>Current Stock</h3>
+    <ul id="stockList" class="list"></ul>
+    <div class="metrics" id="fishMetrics"></div>
+    <div class="meter"><div id="capacityBar"></div></div>
+    <div id="capacityNote" class="small muted"></div>
+  </div>
 </div>
+<div class="nav-row">
+  <div style="margin-left:auto; display:flex; gap:.5rem">
+    <button class="primary back-btn" data-prev="1">← Back</button>
+    <button class="primary next-btn" data-next="3">Next →</button>
+  </div>
+</div>
+
     </section>
 
     <!-- Stage 3 -->
@@ -338,8 +360,10 @@
         </div>
       </div>
       <div class="nav-row">
-  <button class="secondary restart-btn">⟳ Restart</button>
-  <button class="next-btn" data-next="4">Next →</button>
+  <div style="margin-left:auto; display:flex; gap:.5rem">
+    <button class="primary back-btn" data-prev="2">← Back</button>
+    <button class="primary next-btn" data-next="4">Next →</button>
+  </div>
 </div>
     </section>
 
@@ -352,7 +376,10 @@
 </div>
       <div id="summary" class="card"></div>
       <div class="nav-row">
-  <button class="secondary restart-btn">⟳ Restart</button>
+  <div style="margin-left:auto; display:flex; gap:.5rem">
+    <button class="primary back-btn" data-prev="3">← Back</button>
+    <button class="primary restart-btn">⟳ Restart</button>
+  </div>
 </div>
     </section>
   </main>
@@ -378,13 +405,15 @@
   </div>
 
   <footer class="footer">
-    <span>Reef Architect v11 — © 2025</span>
+    <span>Reef Architect v11.4 — © 2025</span>
   </footer>
 
-  <script src="data_species.js"></script>
-  <script src="data_equipment.js"></script>
-  <script src="data_tanks.js"></script>
-  <script src="matrix_starter.js"></script>
-  <script src="app.js"></script>
+<!-- Old static data files no longer needed
+<script src="data_tanks.js"></script>
+<script src="data_equipment.js"></script>
+<script src="data_species.js"></script>
+-->
+<script src="app.js"></script>
+
 </body>
 </html>

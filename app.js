@@ -1,10 +1,300 @@
-// Reef Architect v11 — volume-aware equipment, Beginner/Experienced modes, grouped species,
+// === Safe defaults so the app won’t crash if Sheets fail ===
+let TANKS = [];
+let SUMPS = [];
+
+let LIGHTS = [];
+let RETURN_PUMPS = [];
+let POWERHEADS = [];
+let SKIMMERS = [];
+let HEATERS = [];
+let UVS = [];
+let ATOS = [];
+let REACTORS = [];
+
+let FISH = [];
+let CORALS = [];
+let INVERTS =[];
+
+async function fetchCSV(url) {
+  const res = await fetch(url);
+  const text = await res.text();
+
+  const [headerLine, ...lines] = text.trim().split("\n");
+  // normalize all header names to lowercase so "Type", " type " → "type"
+  const headers = headerLine.split(",").map(h => h.trim().toLowerCase());
+
+  return lines.map(line => {
+    const values = line.split(",").map(v => {
+      const t = v.trim();
+      // remove wrapping quotes if present
+      return (t.startsWith('"') && t.endsWith('"')) ? t.slice(1, -1) : t;
+    });
+    const row = {};
+    headers.forEach((h, i) => { row[h] = values[i]; });
+    return row;
+  });
+}
+// === Load data from Google Sheets and overwrite local data files ===
+async function loadFromSheetsAndOverwriteGlobals() {
+  const SHEETS = {
+  // Tanks workbook: BOTH the Tanks tab CSV and the Sumps tab CSV
+  tanksTabs: [
+    // Tanks tab (published CSV URL)
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vSaRvuIZk7vCsbmyRFmlYOX2fNyAdew8JZnRngpkJwbDy7CzmXZxlSUpAan1oQwBf2lE3IVVwjbQmd_/pub?gid=0&single=true&output=csv",
+    // Sumps tab (published CSV URL — not an edit link)
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vSaRvuIZk7vCsbmyRFmlYOX2fNyAdew8JZnRngpkJwbDy7CzmXZxlSUpAan1oQwBf2lE3IVVwjbQmd_/pub?gid=1826498009&single=true&output=csv"
+  ],
+
+  // Equipment workbook: one PUBLISHED CSV URL per equipment tab
+   equipmentTabs: [
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQMjaShzrYMRl0bAt0IJcbLaZsnlCUBijlXvgVpmmPOJ5n-fEbNtZ4EtXdv_CfXkboMX91yOYmT5QFQ/pub?gid=0&single=true&output=csv",
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQMjaShzrYMRl0bAt0IJcbLaZsnlCUBijlXvgVpmmPOJ5n-fEbNtZ4EtXdv_CfXkboMX91yOYmT5QFQ/pub?gid=1764712152&single=true&output=csv",
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQMjaShzrYMRl0bAt0IJcbLaZsnlCUBijlXvgVpmmPOJ5n-fEbNtZ4EtXdv_CfXkboMX91yOYmT5QFQ/pub?gid=643038263&single=true&output=csv",
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQMjaShzrYMRl0bAt0IJcbLaZsnlCUBijlXvgVpmmPOJ5n-fEbNtZ4EtXdv_CfXkboMX91yOYmT5QFQ/pub?gid=1985034746&single=true&output=csv",
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQMjaShzrYMRl0bAt0IJcbLaZsnlCUBijlXvgVpmmPOJ5n-fEbNtZ4EtXdv_CfXkboMX91yOYmT5QFQ/pub?gid=448098872&single=true&output=csv",
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQMjaShzrYMRl0bAt0IJcbLaZsnlCUBijlXvgVpmmPOJ5n-fEbNtZ4EtXdv_CfXkboMX91yOYmT5QFQ/pub?gid=1240084232&single=true&output=csv",
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQMjaShzrYMRl0bAt0IJcbLaZsnlCUBijlXvgVpmmPOJ5n-fEbNtZ4EtXdv_CfXkboMX91yOYmT5QFQ/pub?gid=642746149&single=true&output=csv",
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQMjaShzrYMRl0bAt0IJcbLaZsnlCUBijlXvgVpmmPOJ5n-fEbNtZ4EtXdv_CfXkboMX91yOYmT5QFQ/pub?gid=1202596940&single=true&output=csv"
+  ],
+
+  // Species workbook: separate URLs for Fish tab and Coral tab (both PUBLISHED CSV)
+  speciesFish:   "https://docs.google.com/spreadsheets/d/e/2PACX-1vTYIOupQvGCyxoXTVflaq5vgLfOYnpcRyBuF_8NHAc9Gw2vIVId3SWoebQuQy967z3pB-YthzwrM3mV/pub?gid=0&single=true&output=csv",
+  speciesCorals: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTYIOupQvGCyxoXTVflaq5vgLfOYnpcRyBuF_8NHAc9Gw2vIVId3SWoebQuQy967z3pB-YthzwrM3mV/pub?gid=764322512&single=true&output=csv"
+};
+
+
+// --- Tanks & sumps (merge all tank-related tabs) ---
+const tanksArrays = await Promise.all(SHEETS.tanksTabs.map(url => fetchCSV(url)));
+const tankCombined = tanksArrays.flat();
+
+// If your tabs include a "type" column, we use it. If not, we detect by columns present.
+TANKS = tankCombined
+  .filter(r => {
+    const t = String(r.type || "").toLowerCase();
+    // headers are all lowercase after parsing:
+    const hasDims = r.l || r.w || r.h;
+    const hasNet  = r.netgal || r.netgallons || r.gallons;
+    return t === "tank" || (!t && (hasNet || hasDims));
+  })
+  .map(r => {
+    const aioFlag = String(r.aio || "").toLowerCase() === "true";
+    const typeStr = String(r.type || (aioFlag ? "aio" : "reef_ready")).toLowerCase();
+    const net = Number(
+      String(r.netgal ?? r.netgallons ?? r.gallons ?? 0).replace(/[^0-9.\-]/g, "")
+    ) || 0;
+    const L = Number(r.l || 0);
+    const W = Number(r.w || 0);
+    const H = Number(r.h || 0);
+
+    return {
+      id: String(r.id || r.slug || r.name || "").trim(),
+      brand: String(r.brand || "").trim(),
+      model: String(r.model || "").trim(),
+      name: String(r.name || `${r.brand||""} ${r.model||""}`).trim(),
+      type: typeStr,
+      aio: aioFlag,
+      dims: { L, W, H },
+      netGal: net,
+      priceUSD: Number(String(r.price ?? r.priceusd ?? "").replace(/[^0-9.\-]/g,"")) || undefined
+    };
+  });
+
+SUMPS = tankCombined
+  .filter(r => {
+    const t = String(r.type || "").toLowerCase();
+    const vol = r.volumegal ?? r.gallons;
+    const net = r.netgal ?? r.netgallons;
+    return t === "sump" || (!!vol && !net);
+  })
+  .map(r => ({
+    id: String(r.id || r.slug || r.name || "").trim(),
+    brand: String(r.brand || "").trim(),
+    model: String(r.model || "").trim(),
+    name: String(r.name || `${r.brand||""} ${r.model||""}`).trim(),
+    volumeGal: Number(r.volumegal ?? r.gallons ?? 0),
+    baffleDepthIn: Number(r.baffledepthin ?? r.skimmerwaterdepth ?? 0),
+    skimmerChamber: {
+      widthIn:  Number(r.skimmerchamberw ?? r.skimmerchamw ?? 0),
+      lengthIn: Number(r.skimmerchamberl ?? r.skimmerchaml ?? 0)
+    },
+    priceUSD: Number(String(r.price ?? r.priceusd ?? "").replace(/[^0-9.\-]/g,"")) || undefined
+  }));
+
+// --- Equipment (merge all equipment tabs) ---
+const eqArrays = await Promise.all(SHEETS.equipmentTabs.map(url => fetchCSV(url)));
+const eqRows = eqArrays.flat();
+// Pre-normalize category once so picking is reliable
+const eqNormalized = eqRows.map(r => ({
+  ...r,
+  _cat: (()=>{
+    let s = String((r.category || r.type) || "").trim().toLowerCase();
+    if (s.includes("light")) return "light";
+    if (s.includes("return")) return "return";
+    if (s.includes("power") || s.includes("wavemaker") || s.includes("gyre")) return "powerhead";
+    if (s.includes("skimmer")) return "skimmer";
+    if (s.includes("heater")) return "heater";
+    if (s.includes("uv")) return "uv";
+    if (s.includes("ato") || s.includes("auto top")) return "ato";
+    if (s.includes("reactor")) return "reactor";
+    return s;
+  })()
+}));
+
+const num = (v)=> {
+  const x = Number(String(v||"").replace(/[^0-9.\-]/g,""));
+  return Number.isFinite(x) ? x : undefined;
+};
+const base = (r) => ({
+  id: String(r.id || r.slug || r.name || "").trim(),
+  brand: String(r.brand || "").trim(),
+  model: String(r.model || "").trim(),
+  name: String(r.name || `${r.brand||""} ${r.model||""}`).trim(),
+  minG: num(r.ming ?? r.mingallons ?? r.minGallons ?? r.minG),
+  maxG: num(r.maxg ?? r.maxgallons ?? r.maxGallons ?? r.maxG),
+  // treat blank as "allowed"; only explicit "false" is excluded in Beginner
+beginner: (()=>{
+  const b = String(r.beginner ?? "").trim().toLowerCase();
+  if (b === "") return undefined;       // blank → allowed
+  if (b === "true") return true;
+  if (b === "false") return false;
+  return undefined;
+})(),
+  priceUSD: num(r.price ?? r.priceusd ?? r.priceUSD)
+});
+const catNormalize = (s) => {
+  s = String(s || "").trim().toLowerCase();
+  if (s.includes("light")) return "light";                // light, lighting, lights
+  if (s.includes("return")) return "return";              // return, return pump
+  if (s.includes("power") || s.includes("wavemaker") || s.includes("gyre")) return "powerhead";
+  if (s.includes("skimmer")) return "skimmer";            // protein skimmer
+  if (s.includes("heater")) return "heater";              // heater(s)
+  if (s.includes("uv")) return "uv";                      // uv, uv sterilizer
+  if (s.includes("ato") || s.includes("auto top")) return "ato"; // ato, auto top off
+  if (s.includes("reactor")) return "reactor";            // media reactor, reactor
+  return s; // fall-through (already normalized)
+};
+
+const pick = (cat) => eqNormalized.filter(r => r._cat === cat);
+
+LIGHTS        = pick("light").map(r => ({
+  ...base(r),
+  coverageInches: num(r.coverageinches ?? r.coverage),
+  parHigh: num(r.parhigh),
+  parMid:  num(r.parmid),
+  parLow:  num(r.parlow)
+}));
+RETURN_PUMPS  = pick("return").map(r => ({
+  ...base(r),
+  maxGph: num(r.maxgph ?? r.maxGph ?? r.gph)
+}));
+POWERHEADS    = pick("powerhead").map(r => ({ ...base(r), gph: num(r.gph) }));
+SKIMMERS      = pick("skimmer").map(r => ({
+  ...base(r),
+  lightRatingG: num(r.lightratingg ?? r.lightRatingG ?? r.lightRating),
+  heavyRatingG: num(r.heavyratingg ?? r.heavyRatingG ?? r.heavyRating)
+}));
+HEATERS       = pick("heater").map(r => ({ ...base(r), watts: num(r.watts) }));
+UVS           = pick("uv").map(r => base(r));
+ATOS          = pick("ato").map(r => base(r));
+REACTORS      = pick("reactor").map(r => base(r));
+
+// Optional: keep raw for debugging
+EQUIPMENT = eqRows;   // (you can keep eqRows or switch to eqNormalized if you prefer)
+
+// --- DEBUG: category and counts ---
+// console.log("[Eq categories raw]", [...new Set(eqRows.map(r => String((r.category||r.type)||"").toLowerCase()))]);
+// console.log("[Eq _cat counts]",
+//  eqNormalized.reduce((acc,r)=>{ acc[r._cat]=(acc[r._cat]||0)+1; return acc; }, {})
+// );
+// console.log("[Eq counts]", {
+//  lights: LIGHTS.length,
+//  returns: RETURN_PUMPS.length,
+//  powerheads: POWERHEADS.length,
+//  skimmers: SKIMMERS.length,
+//  heaters: HEATERS.length,
+//  uvs: UVS.length,
+//  atos: ATOS.length,
+//  reactors: REACTORS.length
+//});
+
+
+// --- Species (fish + inverts + corals from two tabs) ---
+// We convert raw CSV rows into the shape the UI expects.
+
+const fishRows  = await fetchCSV(SHEETS.speciesFish);
+const coralRows = await fetchCSV(SHEETS.speciesCorals);
+// console.log("[Debug] speciesFish rows:", fishRows.length);
+// console.log("[Debug] speciesFish distinct types:", [...new Set(fishRows.map(r => String(r.type || "").trim().toLowerCase()))]);
+// console.log("[Debug] first 2 fish rows:", fishRows.slice(0, 2));
+
+
+// Map FISH rows ...
+FISH = fishRows
+  .filter(r => {
+    const kind = String(r.type || "").trim().toLowerCase();
+    return kind === "fish";
+  })
+  .map(r => ({
+    id:          String(r.id || r.slug || r.name || "").trim(),
+    name:        String(r.name || "").trim(),
+    scientific:  String(r.scientific || r.sciname || "").trim(),
+    minGallons:  num(r.mingallons ?? r.ming ?? r.gallons) ?? 0,
+    bu:          num(r.bu || r.bioload || r.capacity) ?? 10,
+    temperament: String(r.temperament || r.temp || "").trim().toLowerCase(),
+    group:       String(r.group || r.family || "").trim(),
+    beginner:    String(r.beginner || r.isBeginner || "").toLowerCase() === "true"
+  }));
+
+INVERTS = fishRows
+  .filter(r => {
+    const kind = String(r.type || "").trim().toLowerCase();
+    return kind === "invert";
+  })
+  .map(r => ({
+    id:       String(r.id || r.slug || r.name || "").trim(),
+    name:     String(r.name || "").trim(),
+    group:    "Invertebrates",
+    beginner: String(r.beginner || "").toLowerCase() === "true",
+    bu:       Number(r.bu ?? 1) || 1
+  }));
+
+// Map CORALS rows (expects: id, name, coralType, par [low,high], placement, beginner)
+CORALS = coralRows.map(r => ({
+  id:        String(r.id || r.slug || r.name || "").trim(),
+  name:      String(r.name || "").trim(),
+  coralType: String(r.coraltype ?? r.type ?? "").trim().toLowerCase(), // soft/lps/sps
+  par:       [ num(r.parlow) ?? 0, num(r.parhigh) ?? 0 ],
+  placement: String(r.placement ?? r.zone ?? "").trim(),
+  beginner:  String(r.beginner || "").toLowerCase() === "true"
+}));
+
+// console.log("✅ Google Sheets data loaded:", {
+//  tanks: TANKS.length,
+//  equipment: EQUIPMENT.length,
+//  fish: FISH.length,
+//  inverts: INVERTS.length,
+//  animals: FISH.length + INVERTS.length, // fish + inverts
+//  corals: CORALS.length
+// });
+ setAnimalsBadge(); // ✅ update Stage-2 badge after all data loaded
+
+}
+
+// Reef Architect v11.4 — volume-aware equipment, Beginner/Experienced modes, grouped species,
 // compatibility in summary, Welcome+QuickStart fixes, Glossary modal fix,
 // Stage-1 layout usability, Theme label fix.
 
 const $ = (s)=>document.querySelector(s);
 const $$ = (s)=>Array.from(document.querySelectorAll(s));
 const el = (t, c)=>{ const n=document.createElement(t); if(c) n.className=c; return n; };
+function setAnimalsBadge(){
+  const badge = document.getElementById("animalsBadge");
+  if (!badge) return;
+
+  // Count all fish & inverts in the current build
+  const total = (state.fish || []).reduce((sum, x) => sum + (parseInt(x.qty) || 0), 0);
+  badge.textContent = String(total);
+}
 const galFromInches = (L,W,H,D)=> (L*W*H/231) * (1 - (D||0)/100);
 
 const BUILD_TARGETS = {
@@ -115,26 +405,33 @@ function resetAll(){
   document.getElementById('skimmerChamW').value = 10;
   document.getElementById('skimmerChamL').value = 12;
 
-  // equipment (budget-friendly, beginner-safe defaults)
+  // equipment — clear everything to placeholders/zero
   state.equipment = {
-    lighting:"ai_prime_16hd", lightCount:1,
-    returnPump:"sicce_syncra_3",
-    powerhead:"ai_nero3", powerheadCount:1,
-    skimmer:"ro_classic_110int",
-    heater:"eheim_150", heaterCount:1,
-    uv:null, ato:"tunze_3155", reactor:null
+    lighting: null,      lightCount: 0,
+    returnPump: null,
+    powerhead: null,     powerheadCount: 0,
+    skimmer: null,
+    heater: null,        heaterCount: 0,
+    uv: null,
+    ato: null,
+    reactor: null
   };
-  document.getElementById('lighting').value = "ai_prime_16hd";
-  document.getElementById('lightCount').value = 1;
-  document.getElementById('returnPump').value = "sicce_syncra_3";
-  document.getElementById('powerhead').value = "ai_nero3";
-  document.getElementById('powerheadCount').value = 1;
-  document.getElementById('skimmer').value = "ro_classic_110int";
-  document.getElementById('heater').value = "eheim_150";
-  document.getElementById('heaterCount').value = 1;
-  document.getElementById('uvSterilizer').value = "";
-  document.getElementById('atoSystem').value = "tunze_3155";
-  document.getElementById('mediaReactor').value = "";
+
+  // Clear UI selects to blank (placeholder) and qty inputs to 0
+  const selIds = [
+    'lighting','returnPump','powerhead','skimmer','heater',
+    'uvSterilizer','atoSystem','mediaReactor'
+  ];
+  selIds.forEach(id=>{
+    const el = document.getElementById(id);
+    if (el) { el.value = ''; el.dispatchEvent(new Event('change')); }
+  });
+
+  const qtyIds = ['lightCount','powerheadCount','heaterCount'];
+  qtyIds.forEach(id=>{
+    const el = document.getElementById(id);
+    if (el) { el.value = 0; el.dispatchEvent(new Event('input')); }
+  });
 
   // livestock
   state.fish = [];
@@ -157,7 +454,14 @@ function init(){
 
   // Start button on Welcome
   $('#startBtn')?.addEventListener('click', ()=> switchStage('1'));
-
+  // Back buttons
+  $$('.back-btn').forEach(btn=>{
+    btn.addEventListener('click',(e)=>{
+      const prevStage = e.currentTarget.dataset.prev;
+      if(!prevStage) return;
+      switchStage(prevStage);
+    });
+  });
   // Next buttons (attach on init to ensure they bind)
   $$('.next-btn').forEach(btn=>{
     btn.addEventListener('click',(e)=>{
@@ -195,6 +499,7 @@ function bindInputs(){
   $("#expExperienced")?.addEventListener("change", ()=> onChange("experience"));
 
   $("#addFish")?.addEventListener("click", addFish);
+  $("#addInvert")?.addEventListener("click", addInvert);
   $("#addCoral")?.addEventListener("click", addCoral);
 }
 
@@ -314,34 +619,56 @@ function displayCoralGroupLabel(rawType){
   return rawType;
 }
 
-function populateSelect(id, list, labelFn, allowNone=false){
-  const sel = $("#"+id); if(!sel || !list) return;
+function populateSelect(id, list, labelFn, allowNone=false, placeholderText=null){
+  const sel = $("#"+id); 
+  if (!sel || !list) return;
+
   const items = byVolume(list).slice().sort((a,b)=>{
-    const pa=a.priceUSD??Infinity, pb=b.priceUSD??Infinity;
-    if(pa!==pb) return pa-pb;
-    return (a.name||"").localeCompare(b.name||"");
+    const pa = a.priceUSD ?? Infinity, pb = b.priceUSD ?? Infinity;
+    if (pa !== pb) return pa - pb;
+    return (a.name || "").localeCompare(b.name || "");
   });
 
-  sel.innerHTML="";
-  if(allowNone){ const o=document.createElement("option"); o.value=""; o.textContent="— None —"; sel.appendChild(o); }
+  sel.innerHTML = "";
+
+  // If a placeholder is provided, show it as the first blank option
+  if (placeholderText) {
+    const def = document.createElement("option");
+    def.value = "";
+    def.textContent = placeholderText;
+    def.selected = true;
+    sel.appendChild(def);
+  } else if (allowNone) {
+    // Fallback "None" option if caller requested it explicitly
+    const none = document.createElement("option");
+    none.value = "";
+    none.textContent = "— None —";
+    sel.appendChild(none);
+  }
 
   items.forEach(x=>{
     const label = labelFn ? labelFn(x) : x.name;
-    const priced = x.priceUSD!=null ? `${label} — ${money(x.priceUSD)}` : label;
-    const o=document.createElement("option");
-    o.value=x.id; o.textContent=priced;
+    const priced = x.priceUSD != null ? `${label} — ${money(x.priceUSD)}` : label;
+    const o = document.createElement("option");
+    o.value = x.id;
+    o.textContent = priced;
     sel.appendChild(o);
   });
 
-  // keep current selection if possible, else first option
-  const wanted = state.equipment[id];
-  const exists = items.find(i=>i.id===wanted);
-  sel.value = exists ? exists.id : (items[0]?.id ?? sel.value);
-  if (['lighting','returnPump','powerhead','skimmer','heater','uvSterilizer','atoSystem','mediaReactor'].includes(id)) {
+  // Keep current selection if it exists; otherwise stay on the placeholder (blank)
   const keyMap = { uvSterilizer:'uv', atoSystem:'ato', mediaReactor:'reactor' };
-  const key = keyMap[id] || id;
-  state.equipment[key] = sel.value || null;
-}
+  const equipKey = keyMap[id] || id;
+  const wanted = state.equipment[equipKey];
+
+  if (wanted) {
+    const exists = items.find(i => i.id === wanted);
+    sel.value = exists ? exists.id : "";
+  } else {
+    sel.value = ""; // stay on placeholder
+  }
+
+  // Mirror back to state.equipment
+  state.equipment[equipKey] = sel.value || null;
 }
 
 function populateSpecies(){
@@ -367,6 +694,21 @@ function populateSpecies(){
       fsel.appendChild(og);
     });
   }
+  // INVERTS grouped into a single "Clean-Up Crew" list
+  const invertSel = document.getElementById("invertSelect");
+  if(invertSel){
+    invertSel.innerHTML="";
+    const src = state.beginner ? INVERTS.filter(i=>i.beginner) : INVERTS.slice();
+    const og = document.createElement("optgroup");
+    og.label = "Clean-Up Crew";
+    src.sort((a,b)=>a.name.localeCompare(b.name)).forEach(i=>{
+      const o=document.createElement("option");
+      o.value=i.id;
+      o.textContent=`${i.name}`;
+      og.appendChild(o);
+    });
+    invertSel.appendChild(og);
+  }
 
   // CORALS grouped by Soft/LPS/SPS, alphabetized within each group
   const csel=$("#coralSelect");
@@ -379,6 +721,18 @@ function populateSpecies(){
       groups[label] ||= [];
       groups[label].push(c);
     });
+  // INVERTS (Clean-Up Crew), simple A–Z
+  const isel = $("#invertSelect");
+  if (isel) {
+    isel.innerHTML = "";
+    const src = state.beginner ? INVERTS.filter(i => i.beginner) : INVERTS.slice();
+    src.sort((a, b) => a.name.localeCompare(b.name)).forEach(i => {
+      const o = document.createElement("option");
+      o.value = i.id;
+      o.textContent = i.name;
+      isel.appendChild(o);
+    });
+}
     Object.keys(groups).sort((a,b)=>a.localeCompare(b)).forEach(label=>{
       const og = document.createElement("optgroup"); og.label = label;
       groups[label].sort((a,b)=>a.name.localeCompare(b.name)).forEach(c=>{
@@ -390,6 +744,8 @@ function populateSpecies(){
       csel.appendChild(og);
     });
   }
+
+ setAnimalsBadge(); // ✅ refresh badge whenever species list is rebuilt
 }
 
 function populateTanks(){
@@ -416,23 +772,31 @@ function populateSumps(){
   const ssel=$("#sumpModel"); if(!ssel) return;
   ssel.innerHTML=""; const def=document.createElement("option");
   def.value=""; def.textContent="— Select a sump preset —"; def.selected=true; ssel.appendChild(def);
-  (state.beginner? SUMPS.filter(s=>s.beginner):SUMPS).forEach(s=>{
+  (state.beginner ? SUMPS.filter(s => s.beginner !== false) : SUMPS).forEach(s=>{
     const o=document.createElement("option"); o.value=s.id; o.textContent=`${s.name} — ${s.volumeGal}g (baffle ${s.baffleDepthIn}" · chamber ${s.skimmerChamber.widthIn}×${s.skimmerChamber.lengthIn}")`; ssel.appendChild(o);
   });
 }
 function populateAll(){
-  populateSelect("lighting", LIGHTS, x=>x.name);
-  populateSelect("returnPump", RETURN_PUMPS, x=>x.name);
-  populateSelect("powerhead", POWERHEADS, x=>x.name);
-  const allowNone = state.aio || tankGallons()<=40;
-  populateSelect("skimmer", SKIMMERS, x=>`${x.name} (L:${x.lightRatingG}/H:${x.heavyRatingG}g)`, allowNone);
-  populateSelect("heater", HEATERS, x=>x.name);
-  populateSelect("uvSterilizer", UVS, x=>x.name, true);
-  populateSelect("atoSystem", ATOS, x=>x.name);
-  populateSelect("mediaReactor", REACTORS, x=>x.name, true);
+  // Equipment (with placeholders)
+  populateSelect("lighting",      LIGHTS,      x=>x.name, false, "— Select lighting —");
+  populateSelect("returnPump",    RETURN_PUMPS,x=>x.name, false, "— Select return pump —");
+  populateSelect("powerhead",     POWERHEADS,  x=>x.name, false, "— Select powerhead —");
 
-  populateSpecies(); populateTanks(); populateSumps();
-  toggleBeginnerAdvanced(); updateFit();
+  const allowNone = state.aio || tankGallons() <= 40; // your existing rule for skimmer optionality
+  populateSelect("skimmer",       SKIMMERS,    x=>`${x.name} (L:${x.lightRatingG}/H:${x.heavyRatingG}g)`, allowNone, "— Select skimmer —");
+  populateSelect("heater",        HEATERS,     x=>x.name, false, "— Select heater —");
+
+  // advanced
+  populateSelect("uvSterilizer",  UVS,         x=>x.name, true,  "— Select UV —");
+  populateSelect("atoSystem",     ATOS,        x=>x.name, false, "— Select ATO —");
+  populateSelect("mediaReactor",  REACTORS,    x=>x.name, true,  "— Select reactor —");
+
+  // existing population for species/tanks/sumps (leave as-is)
+  populateSpecies(); 
+  populateTanks(); 
+  populateSumps();
+  toggleBeginnerAdvanced(); 
+  updateFit();
 }
 
 // ------- Apply tank preset + Red Sea pairing -------
@@ -657,12 +1021,40 @@ function updateFit(){
 
 // ------- Fish & Corals -------
 function addFish(){ const id=$("#fishSelect").value; const qty=parseInt($("#fishQty").value)||1; const spec=FISH.find(f=>f.id===id); if(!spec) return; const ex=state.fish.find(x=>x.id===id); if(ex) ex.qty+=qty; else state.fish.push({id,qty}); renderFish(); }
-function removeFish(id){ state.fish=state.fish.filter(x=>x.id!==id); renderFish(); }
-function renderFish(){
-  const ul=$("#stockList"); if(!ul) return; ul.innerHTML="";
-  state.fish.forEach(item=>{ const spec=FISH.find(f=>f.id===item.id); if(!spec) return; const li=el("li"); li.innerHTML=`<div><b>${spec.name}</b> × ${item.qty}</div><div><button class="secondary" onclick="removeFish('${item.id}')">Remove</button></div>`; ul.appendChild(li); });
-  updateCapacity();
+ function addInvert(){
+  const id  = $("#invertSelect").value;
+  const qty = parseInt($("#invertQty").value) || 1;
+  const spec = INVERTS.find(i => i.id === id);
+  if (!spec) return;
+  const ex = state.fish.find(x => x.id === id);
+  if (ex) ex.qty += qty;
+  else state.fish.push({ id, qty });
+  renderFish();
 }
+
+function removeFish(id){
+  state.fish = state.fish.filter(x => x.id !== id);
+  renderFish();
+}
+
+function renderFish(){
+  const ul = $("#stockList");
+  if (!ul) return;
+  ul.innerHTML = "";
+  state.fish.forEach(item => {
+    const spec = FISH.find(f => f.id === item.id) || INVERTS.find(i => i.id === item.id);
+    if (!spec) return;
+    const li = el("li");
+    li.innerHTML = `
+      <div><b>${spec.name}</b> × ${item.qty}</div>
+      <div><button class="secondary" onclick="removeFish('${item.id}')">Remove</button></div>
+    `;
+    ul.appendChild(li);
+  });
+  updateCapacity();
+  setAnimalsBadge();
+}
+
 function addCoral(){ const id=$("#coralSelect").value; const qty=parseInt($("#coralQty").value)||1; const spec=CORALS.find(c=>c.id===id); if(!spec) return; const ex=state.corals.find(x=>x.id===id); if(ex) ex.qty+=qty; else state.corals.push({id,qty}); renderCorals(); }
 function removeCoral(id){ state.corals=state.corals.filter(x=>x.id!==id); renderCorals(); }
 function renderCorals(){
@@ -762,15 +1154,35 @@ function applyQuickStart(key){
     $("#heaterCount").value = state.equipment.heaterCount;
   }
 
-  // Skimmer/sump: not needed for small AIO; otherwise pick a cheap compatible option
-  if(state.aio || g <= 40){
-    state.equipment.skimmer = null; $("#skimmer").value = "";
-    state.sump.use = false; $("#useSump").value = "no";
+    // Skimmer/sump: not needed for small AIO; otherwise choose by **heavy** rating for reefs
+  if (state.aio || g <= 40) {
+    state.equipment.skimmer = null;
+    $("#skimmer").value = "";
+    state.sump.use = false;
+    $("#useSump").value = "no";
   } else {
-    const ski = pickBudget(SKIMMERS);
-    if(ski){ state.equipment.skimmer = ski.id; $("#skimmer").value = ski.id; }
+    const reefBuild = state.buildType !== "fowlr";   // reef builds must meet heavy rating
+    const targetG   = g;
+
+    // Filter skimmers that meet capacity (heavy for reef, light for FOWLR)
+    const candidates = (SKIMMERS || []).filter(x => {
+      if (!x) return false;
+      const capacity = reefBuild ? (x.heavyRatingG || 0) : (x.lightRatingG || 0);
+      return capacity >= targetG;
+    });
+
+    // Choose the cheapest among the capable ones; if none are capable, choose the highest heavy rating fallback
+    const ski = candidates.length
+      ? candidates.slice().sort((a, b) => (a.priceUSD ?? 9e9) - (b.priceUSD ?? 9e9))[0]
+      : (SKIMMERS || []).slice().sort((a, b) => (b.heavyRatingG || 0) - (a.heavyRatingG || 0))[0];
+
+    if (ski) {
+      state.equipment.skimmer = ski.id;
+      $("#skimmer").value = ski.id;
+    }
+
     const sumpPick = pickBudget(SUMPS);
-    if(sumpPick){ applySumpModel(sumpPick.id); }
+    if (sumpPick) { applySumpModel(sumpPick.id); }
   }
 
   populateAll(); updateTank(); renderSummary(); renderBudgetNow();
@@ -1076,19 +1488,41 @@ function initExport(){
   });
 }
 
-// Boot
-document.addEventListener("DOMContentLoaded", init);
+// ---- Boot: wait for Google Sheets before starting ----
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    await loadFromSheetsAndOverwriteGlobals();  // fetch all live data
+  } catch (err) {
+    console.warn("⚠️ Google Sheets failed to load. Using built-in data instead.", err);
+  }
 
-// Also keep the progressive Next → handler for any dynamically added buttons
-document.querySelectorAll(".next-btn").forEach(btn=>{
-  btn.addEventListener("click",(e)=>{
-    const nextStage=e.target.dataset.next;
-    if(!nextStage) return;
-    document.querySelectorAll(".stage").forEach(s=>s.classList.remove("visible"));
-    const next=$("#stage-"+nextStage); if(next) next.classList.add("visible");
-    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-    const nextTab=document.querySelector(`.tab[data-stage='${nextStage}']`); if(nextTab) nextTab.classList.add("active");
-    window.scrollTo({ top:0, behavior:"smooth" });
-    if(nextStage==="4") renderSummary();
+  // Now start the normal app
+  init();
+
+  // Re-add the “Next →” button handler (same logic as before)
+  document.querySelectorAll(".next-btn").forEach(btn=>{
+    btn.addEventListener("click",(e)=>{
+      const nextStage=e.target.dataset.next;
+      if(!nextStage) return;
+      document.querySelectorAll(".stage").forEach(s=>s.classList.remove("visible"));
+      const next=document.querySelector("#stage-"+nextStage); if(next) next.classList.add("visible");
+      document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+      const nextTab=document.querySelector(`.tab[data-stage='${nextStage}']`); if(nextTab) nextTab.classList.add("active");
+      window.scrollTo({ top:0, behavior:"smooth" });
+      if(nextStage==="4") renderSummary();
+    });
   });
+document.querySelectorAll(".back-btn").forEach(btn=>{
+  btn.addEventListener("click",(e)=>{
+    const prevStage = e.target.dataset.prev;
+    if(!prevStage) return;
+    document.querySelectorAll(".stage").forEach(s=>s.classList.remove("visible"));
+    const prev = document.querySelector("#stage-"+prevStage); 
+    if(prev) prev.classList.add("visible");
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    const prevTab = document.querySelector(`.tab[data-stage='${prevStage}']`); 
+    if(prevTab) prevTab.classList.add("active");
+    window.scrollTo({ top:0, behavior:"smooth" });
+  });
+});
 });
