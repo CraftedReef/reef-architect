@@ -80,8 +80,7 @@
       <a href="crash-course.html" class="cta">Crash Course</a>
 <a href="about.html" class="secondary">About</a>
 <a href="feedback.html" class="secondary">Review</a>
-      <button id="themeToggle" class="secondary" aria-pressed="false" title="Toggle light/dark">🌗 Theme</button>
-
+      
       <div class="export-group">
         <button id="exportPortrait" class="secondary">Export → PDF (Portrait)</button>
         <button id="exportLandscape" class="secondary">Export → PDF (Landscape)</button>
@@ -99,6 +98,7 @@
 </button>
       <button class="tab" data-stage="3">3. Corals</button>
       <button class="tab" data-stage="4">4. Summary</button>
+      <button class="tab" data-stage="5">Visualizer</button>
     </section>
 
     <!-- Welcome -->
@@ -379,9 +379,45 @@
   <div style="margin-left:auto; display:flex; gap:.5rem">
     <button class="primary back-btn" data-prev="3">← Back</button>
     <button class="primary restart-btn">⟳ Restart</button>
+    <button class="primary" id="goViz" data-next="5">Visualize →</button>
   </div>
 </div>
     </section>
+
+<section class="stage" id="stage-5" aria-label="3-D Visualizer">
+  <div class="card">
+    <h2>Blueprint 3-D Visualizer</h2>
+    <p class="muted">NOTE: This is a concept visualizer and currently a work in progress. Use the different viewing options to visualize your setup. Use the toggles to show/hide overlays.and use your mouse to orbit (drag), right-drag to pan, and scroll to zoom.</p>
+
+    <!-- Simple toolbar -->
+    <div class="row" style="gap:8px; margin-bottom:10px;">
+      <label><input type="checkbox" id="vizShowLights" checked> Show light cones</label>
+      <label><input type="checkbox" id="vizShowFlow" checked> Show flow arrows</label>
+      <button id="vizViewTop" class="secondary">Top</button>
+      <button id="vizViewFront" class="secondary">Front</button>
+      <button id="vizViewIso" class="secondary">¾ View</button>
+      <button id="vizScreenshot" class="secondary">Save Screenshot</button>
+    </div>
+
+    <section class="card" id="vizContainer">
+  <!-- NEW: compact equipment summary bar -->
+  <div id="vizEquip" class="metrics" style="margin-bottom:10px"></div>
+
+  <div id="viz3d"></div>
+
+  <p id="vizNote" class="muted" style="margin-top:8px;">
+    NOTE: This is a concept visualizer and currently a work in progress. Use the different viewing options to visualize your setup. Use the toggles to show/hide overlays.and use your mouse to orbit (drag), right-drag to pan, and scroll to zoom.
+  </p>
+</section>
+
+<div class="nav-row">
+         <div style="margin-left:auto; display:flex; gap:.5rem">
+             <button class="primary back-btn" id="vizBack" data-prev="4">← Back</button>
+          </div>
+      </div>
+ </div>
+</section>
+
   </main>
 
   <!-- Glossary Modal (fixed overlay, hidden by default) -->
@@ -413,6 +449,31 @@
 <script src="data_equipment.js"></script>
 <script src="data_species.js"></script>
 -->
+<!-- Try CDN first -->
+<!-- Modern Three.js (r170+) as ES module -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+
+<!-- Load the current module build, expose globals for legacy scripts -->
+<script type="module">
+  import * as THREE from 'three';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+  // Create a plain, extensible object for legacy scripts:
+  window.THREE = Object.assign({}, THREE, { OrbitControls });
+
+  // Also expose the class directly (in case visualizer.js checks this):
+  window.OrbitControls = OrbitControls;
+</script>
+
+<!-- Now your existing scripts will see THREE + OrbitControls -->
+<script src="visualizer.js"></script>
 <script src="app.js"></script>
 
 </body>

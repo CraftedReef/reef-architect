@@ -331,6 +331,8 @@ const state = {
   },
   fish:[], corals:[]
 };
+window.state = state;
+
 
 // ------- Theme -------
 function preferredTheme(){
@@ -346,31 +348,6 @@ function applyTheme(theme){
     btn.setAttribute('aria-pressed', theme==='dark'?'true':'false');
     btn.textContent = theme==='dark' ? '🌙 Dark' : '🌞 Light';
   }
-}
-function initTheme(){
-  // 1) Apply saved/system theme now
-  applyTheme(preferredTheme());
-
-  // 2) Toggle + persist
-  document.getElementById('themeToggle')?.addEventListener('click', ()=>{
-    const cur  = document.documentElement.getAttribute('data-theme') || 'light';
-    const next = (cur === 'dark') ? 'light' : 'dark';
-    applyTheme(next);
-    try { localStorage.setItem('theme', next); } catch(e){}
-  });
-
-  // 3) If user hasn’t chosen a theme yet, follow OS changes
-  if (!localStorage.getItem('theme') && window.matchMedia) {
-    try {
-      window.matchMedia('(prefers-color-scheme: dark)')
-        .addEventListener('change', (e)=> applyTheme(e.matches ? 'dark' : 'light'));
-    } catch(e){}
-  }
-
-  // 4) Re-apply on back/forward cache restore (fixes "stuck" theme on Back)
-  window.addEventListener('pageshow', () => {
-    applyTheme(preferredTheme());
-  });
 }
 
 function resetAll(){
@@ -445,8 +422,7 @@ function resetAll(){
 
 // ------- Init -------
 function init(){
-  initTheme();
-
+ 
   // Tabs
   $$('#stage-tabs .tab').forEach(btn=>{
     btn.addEventListener('click',()=>switchStage(btn.dataset.stage));
@@ -476,7 +452,16 @@ function init(){
   $$('.restart-btn').forEach(btn=>{
     btn.addEventListener('click', resetAll);
   });
+  // ✅ Visualizer navigation
+  document.getElementById('goViz')?.addEventListener('click', ()=> {
+    switchStage('5');          // go from Summary → Visualizer
+  });
 
+  document.getElementById('vizBack')?.addEventListener('click', ()=> {
+    switchStage('4');          // go from Visualizer → Summary
+  });
+
+  // existing code continues…
   bindInputs();
   updateTank();
   populateAll();
@@ -511,6 +496,7 @@ function onChange(id){
     populateAll();
     renderSummary();
     renderBudgetNow();
+    renderVizEquipment(); 
     return;
   }
   if(id==="buildName"){
@@ -862,13 +848,27 @@ function applySumpModel(id){
 
 // ------- Stages -------
 function switchStage(n){
-  document.querySelectorAll(".stage").forEach(s=>s.classList.remove("visible"));
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-  $("#stage-"+n).classList.add("visible");
+  // 1) If we are LEAVING the Visualizer (Stage 5), stop it first
+  const currentlyVisible = document.querySelector(".stage.visible");
+  if (currentlyVisible && currentlyVisible.id === "stage-5") {
+    try { window.destroyVisualizer && window.destroyVisualizer(); } catch(e){}
+  }
+
+  // 2) Standard stage switching (unchanged behavior)
+  document.querySelectorAll(".stage").forEach(s => s.classList.remove("visible"));
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  $("#stage-" + n).classList.add("visible");
   document.querySelector(`.tab[data-stage='${n}']`).classList.add("active");
-  window.scrollTo({ top:0, behavior:"smooth" });
-  if(n==="4") renderSummary();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  // 3) Stage-specific hooks
+  if (n === "4") renderSummary();         // keep your existing Summary refresh
+  if (n === "5") {
+            try { window.initVisualizer && window.initVisualizer(); } catch(e){}
+            renderVizEquipment(); // ← NEW
+       }
 }
+
 
 // ------- Tank + Fit -------
 function updateTank(){
@@ -931,6 +931,22 @@ function updateFit(){
   if(circX<flowLow) notes.push(fitNote(`Flow low (~${circX.toFixed(1)}×). Target ${flowLow}–${flowHigh}×.`,"warn","Total flow = (return + powerheads) ÷ tank volume. Softies/LPS often 10–30×; SPS tanks may need more."));
   else if(circX>Math.max(flowHigh*1.5,60)) notes.push(fitNote(`Flow very high (~${circX.toFixed(1)}×). Reduce/diffuse.`,"warn","Excessive flow can stress fish and corals. Aim for a gentle, varied current rather than a constant blast."));
   else notes.push(fitNote(`Flow OK (~${circX.toFixed(1)}×).`,"good","Overall water movement looks appropriate for your selected build type."));
+// NEW: coverage-style guard for powerheads on long reefs
+if (ph && (state.buildType !== 'fowlr')) {
+  const gyre = isGyrePump(ph);
+  const L = state.tank.lengthIn || 24;
+  // On 48"+ reefs, a single puck-style powerhead is likely to leave dead spots.
+  if (!gyre && L >= 48 && phCount < 2) {
+    notes.push(
+      fitNote(
+        `Single powerhead on 48″ reef may leave dead spots.`,
+        "warn",
+        "Use two opposing puck-style powerheads (or a single gyre) for better crossflow and polyp movement."
+      )
+    );
+  }
+}
+
 
   // Heaters
   const totalW=(heater?.watts||0)*heaterCount;
@@ -954,12 +970,24 @@ function updateFit(){
     const L = state.tank.lengthIn || 0, W = state.tank.widthIn || 0;
     const isCube = Math.abs(L - W) < 4 && L <= 24;
     const smallNano = state.aio || (gNow <= 32);
-    const needed = (smallNano || isCube)
-      ? 1
-      : Math.max(1, Math.ceil(L / (light.coverageInches || 24)));
+  const bar = isBarLight(light);
+
+// For bar lights, trust the sheet coverage (bars legitimately span more length).
+// For puck lights, clamp to a realistic 20–24" per unit.
+const effectiveSpan = bar
+  ? Math.max(24, (light.coverageInches || 48))   // bars often cover 36–48"+
+  : Math.max(20, Math.min(24, (light.coverageInches || 24)));
+
+const needed = (smallNano || isCube)
+  ? 1
+  : Math.max(1, Math.ceil(L / effectiveSpan));
+
+// LPS guardrail: if 48" long and not a bar, require at least 2
+const lpsGuard = (!bar && state.buildType === 'lps' && L >= 48) ? 2 : 1;
+const requiredCount = Math.max(needed, lpsGuard);
 
     const parTarget = currentParTarget();
-    const estHigh = (light.parHigh || 200) * (lightCount / needed);
+    const estHigh = (light.parHigh || 200) * (lightCount / requiredCount);
 
     if (isCube) {
       notes.push(
@@ -971,23 +999,23 @@ function updateFit(){
       );
     }
 
-    if (lightCount < needed) {
-      notes.push(
-        fitNote(
-          `Lighting coverage may be low for tank length.`,
-          "warn",
-          "Coverage = number of fixtures needed to evenly light the tank length (many pucks cover ~24in)."
-        )
-      );
-    } else {
-      notes.push(
-        fitNote(
-          `Lighting coverage OK.`,
-          "good",
-          "Number of fixtures should provide even coverage across the tank."
-        )
-      );
-    }
+    if (lightCount < requiredCount) {
+  notes.push(
+    fitNote(
+      `Lighting coverage may be low for tank length.`,
+      "warn",
+      "Puck fixtures typically cover ~24″ each; 48″ LPS builds usually need at least two pucks unless you're using bar lights."
+    )
+  );
+} else {
+  notes.push(
+    fitNote(
+      `Lighting coverage OK.`,
+      "good",
+      "Fixture count should provide even coverage across the tank."
+    )
+  );
+}
 
     if (state.buildType !== "fowlr") {
       if (estHigh < parTarget) {
@@ -1082,6 +1110,31 @@ function pickBudget(list){
                               .filter(x => x.priceUSD != null);
   return items.sort((a,b) => (a.priceUSD ?? 9e9) - (b.priceUSD ?? 9e9))[0] || null;
 }
+function isBarLight(light){
+  if (!light) return false;
+  const s = [light.id, light.brand, light.model, light.name]
+    .map(x => String(x||"").toLowerCase()).join(" ");
+  return (
+    s.includes("blade") ||  // AI Blade
+    s.includes("xho")   ||  // ReefBrite XHO
+    s.includes("bar")   ||  // generic "bar/reefbar/led bar"
+    s.includes("strip") ||  // generic strip
+    s.includes("orbit") ||  // Current USA Orbit
+    s.includes("fluval 3.0")
+  );
+}
+function isGyrePump(pump){
+  if (!pump) return false;
+  const s = [pump.id, pump.brand, pump.model, pump.name]
+    .map(x => String(x||"").toLowerCase()).join(" ");
+  // Common gyre / crossflow identifiers (add more models if you use them)
+  return (
+    s.includes("gyre") ||      // Maxspect Gyre, IceCap Gyre
+    s.includes("xf")   ||      // e.g., "XF 330"
+    s.includes("crossflow")    // generic descriptor
+  );
+}
+
 function cheapestLightCountForLength(light, lengthIn, widthIn = 0){
   const cov = light?.coverageInches || 24;
   const L = lengthIn || 0;
@@ -1093,6 +1146,24 @@ function cheapestLightCountForLength(light, lengthIn, widthIn = 0){
 
   return Math.max(1, Math.ceil(L / cov));
 }
+
+function isBarLight(light){
+  if(!light) return false;
+  const s = [
+    light.id, light.brand, light.model, light.name
+  ].map(x => String(x||"").toLowerCase()).join(" ");
+
+  // Common bar/strip identifiers – expand if needed
+  return (
+    s.includes("blade") ||  // AI Blade
+    s.includes("xho")   ||  // ReefBrite XHO
+    s.includes("bar")   ||  // generic "bar"/"reefbar"/"led bar"
+    s.includes("strip") ||  // generic strip lights
+    s.includes("orbit") ||  // Current USA Orbit
+    s.includes("fluval 3.0")
+  );
+}
+
 function applyQuickStart(key){
   // Preset: tank + build + starter stocking
   const preset = suggestFor(key);
@@ -1121,29 +1192,62 @@ function applyQuickStart(key){
   if(ret){ state.equipment.returnPump = ret.id; $("#returnPump").value = ret.id; }
 
   const ph = pickBudget(POWERHEADS);
-  if(ph){
-    state.equipment.powerhead = ph.id; $("#powerhead").value = ph.id;
-    // aim for mid target flow
-    const targetX = (BUILD_TARGETS[state.buildType].flow[0] + BUILD_TARGETS[state.buildType].flow[1]) / 2;
-    const returnGph = (ret?.maxGph || 0) * 0.6;
-    const need = Math.max(0, targetX * g - returnGph);
-    const count = Math.max(1, Math.ceil(need / (ph.gph || 1000)));
-    state.equipment.powerheadCount = Math.min(3, count);
-    $("#powerheadCount").value = state.equipment.powerheadCount;
-  }
+if (ph) {
+  state.equipment.powerhead = ph.id;
+  $("#powerhead").value = ph.id;
+
+  // Aim for mid target turnover
+  const targetX = (BUILD_TARGETS[state.buildType].flow[0] + BUILD_TARGETS[state.buildType].flow[1]) / 2;
+  const returnGph = (ret?.maxGph || 0) * 0.6;
+  const need = Math.max(0, targetX * g - returnGph);
+
+  // Base count by pump rated GPH
+  const count = Math.max(1, Math.ceil(need / (ph.gph || 1000)));
+
+  // NEW: 48"+ reef tanks (e.g., 90g LPS) need at least 2 puck-style powerheads
+  // unless the unit is a true gyre/crossflow.
+  const L = state.tank.lengthIn || 24;
+  const reef = state.buildType !== 'fowlr';
+  const gyre = isGyrePump(ph);
+  const phMin = (reef && !gyre && L >= 48) ? 2 : 1;
+
+  state.equipment.powerheadCount = Math.max(phMin, Math.min(3, count));
+  $("#powerheadCount").value = state.equipment.powerheadCount;
+}
+
 
   const light = pickBudget(LIGHTS);
-  if(light){
-  state.equipment.lighting = light.id; $("#lighting").value = light.id;
+if (light) {
+  state.equipment.lighting = light.id;
+  $("#lighting").value = light.id;
+
+  // Base count from coverage
   let lc = cheapestLightCountForLength(light, L, state.tank.widthIn);
 
-  // 🔒 Nano override: small AIOs or ≤32g (non-SPS) should default to ONE puck
+  // Nano-softie override (unchanged)
   const gNow = state.tank.gallons || 0;
   const isNanoSoft = (state.aio || gNow <= 32) && state.buildType !== 'sps';
   if (isNanoSoft) lc = 1;
 
-  state.equipment.lightCount = lc; $("#lightCount").value = lc;
+  // --- NEW RULES ---
+  // For reef tanks (anything except FOWLR) that are ≥ 36" long and NOT using bar lights,
+  // enforce a more realistic minimum for pucks.
+  const isReef = state.buildType !== 'fowlr';
+  const bar    = isBarLight(light);
+
+  if (isReef && !bar) {
+    // Treat puck-style fixtures as ~24" effective coverage.
+    const neededByLength = Math.max(1, Math.ceil(L / Math.max(20, (light.coverageInches || 24))));
+    // Specific guard for our 48" LPS preset: minimum two pucks.
+    const lpsGuard = (L >= 48 && state.buildType === 'lps') ? 2 : 1;
+
+    lc = Math.max(lc, neededByLength, lpsGuard);
+  }
+
+  state.equipment.lightCount = lc;
+  $("#lightCount").value = lc;
 }
+
 
   const heat = pickBudget(HEATERS);
   if(heat){
@@ -1382,6 +1486,26 @@ function renderBudgetNow(){
     <hr class="muted"/>
     <div style="display:flex;justify-content:space-between"><b>Total</b><b>$${(subtotal||0).toFixed(2)}</b></div>
   `;
+}
+function renderVizEquipment(){
+  const host = document.getElementById('vizEquip');
+  if (!host) return;
+
+  const eq = state.equipment;
+  const nameOf = (list, id) => (list?.find?.(x => x.id === id) || {}).name || "—";
+
+  const parts = [
+    `Lighting: <b>${nameOf(LIGHTS, eq.lighting)}</b> × ${eq.lightCount || 0}`,
+    `Return: <b>${nameOf(RETURN_PUMPS, eq.returnPump)}</b>`,
+    `Powerheads: <b>${nameOf(POWERHEADS, eq.powerhead)}</b> × ${eq.powerheadCount || 0}`,
+    `Skimmer: <b>${eq.skimmer ? nameOf(SKIMMERS, eq.skimmer) : 'None'}</b>`,
+    `Heaters: <b>${nameOf(HEATERS, eq.heater)}</b> × ${eq.heaterCount || 0}`
+  ];
+
+  host.innerHTML = `<div class="small muted">Selected Equipment</div>
+    <ul class="list" style="margin-top:6px">
+      ${parts.map(p=>`<li>${p}</li>`).join("")}
+    </ul>`;
 }
 
 function renderBudgetSummary(){

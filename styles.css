@@ -40,30 +40,6 @@
   --link: #93c5fd;
 }
 
-html[data-theme="light"] {
-  --bg: #f5f7fb;
-  --bg-elev: #ffffff;
-  --text: #111827;
-  --muted: #6b7280;
-
-  --card: #ffffff;
-  --card-border: #e5e7eb;
-
-  --primary: #2563eb;
-  --primary-600: #1d4ed8;
-  --primary-700: #1e40af;
-
-  --outline: #c7d2fe;
-
-  --tab-bg: #eef2ff;
-  --tab-active: #e0e7ff;
-
-  --meter-bg: #e5e7eb;
-  --meter-fill: #2563eb;
-
-  --link: #1d4ed8;
-}
-
 /* reset-ish */
 * { box-sizing: border-box; }
 html, body { margin:0; padding:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', 'Segoe UI Emoji'; }
@@ -118,9 +94,15 @@ h2 { margin: 10px 0 12px; font-size: 1.25rem; }
 h3 { margin: 12px 0 10px; font-size: 1.05rem; }
 
 .card {
-  background: var(--card); border: 1px solid var(--card-border);
-  border-radius: var(--radius); padding: 14px; margin-bottom: 12px;
-  box-shadow: var(--shadow-1);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 12px;
+
+  /* Blue glow highlight (matches login logo, no movement) */
+  box-shadow: 0 0 25px rgba(14, 165, 233, 0.35);
+  transition: box-shadow 0.3s ease;
 }
 
 .row { display: grid; grid-template-columns: 180px 1fr; gap: 10px; align-items: center; margin: 8px 0; }
@@ -322,14 +304,6 @@ border-radius: 10px; /* optional: keeps the rounded style */
   color: #aaa;
 }
 
-/* Optional: theme consistency */
-body.light #parBar {
-  background: linear-gradient(90deg, #0055cc, #33ccff);
-}
-body.dark #parBar {
-  background: linear-gradient(90deg, #00aaff, #66ffff);
-}
-
 /* === Flow Meter === */
 #flowBar {
   height: 100%;
@@ -506,4 +480,27 @@ table.mini thead th {
   background: var(--accent, #3b82f6);
   color: white;
 }
+#vizContainer {
+  position: relative;
+  overflow: visible;        /* was hidden → caused cropping */
+  max-width: 100%;
+  /* no fixed height here; let the content (vizEquip + canvas) define it */
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  background: var(--bg-elev);
+}
+
+/* Size the canvas area itself */
+#viz3d { 
+  width: 100%;
+  height: min(70vh, 680px);
+  min-height: 420px;
+  display: block;
+}
+#viz3d canvas { 
+  width: 100% !important; 
+  height: 100% !important; 
+  display: block; 
+}
+
 
