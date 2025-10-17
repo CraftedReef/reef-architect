@@ -332,6 +332,140 @@ table.mini thead th {
   text-align: left;
   opacity: 0.9;
 }
+.budget-table-wrapper {
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.budget-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  font-size: 0.95rem;
+}
+
+.budget-table th {
+  background: var(--accent, #1e3a8a);
+  color: #fff;
+  text-align: left;
+  padding: 10px 12px;
+  font-weight: 600;
+  border-bottom: 2px solid var(--card-border, #333);
+}
+
+.budget-table td {
+  padding: 10px 12px;
+  vertical-align: top;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.budget-table tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.budget-note {
+  margin-top: 0.75rem;
+  font-style: italic;
+  color: var(--muted-text, #aaa);
+}
+/* === Key Terms Table (Crash Course) === */
+.keyterms-table-wrapper {
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.keyterms-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--card-border, #333);
+  background: var(--card, #111);
+  font-size: 0.95rem;
+}
+
+.keyterms-table th {
+  background: var(--accent, #1e3a8a);
+  color: #fff;
+  text-align: left;
+  padding: 10px 12px;
+  font-weight: 600;
+  border-bottom: 2px solid var(--card-border, #333);
+}
+
+.keyterms-table td {
+  padding: 10px 12px;
+  vertical-align: top;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.keyterms-table tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+@media (max-width: 700px) {
+  .keyterms-table td b {
+    display: block;
+    margin-bottom: 4px;
+  }
+}
+/* === Crash Course: Generic Table (Water & Salt, etc.) === */
+.course-table-wrapper {
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.course-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  font-size: 0.95rem;
+}
+
+.course-table th {
+  background: var(--primary);
+  color: #fff;
+  text-align: left;
+  padding: 10px 12px;
+  font-weight: 600;
+  border-bottom: 2px solid var(--card-border);
+}
+
+.course-table td {
+  padding: 10px 12px;
+  vertical-align: top;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.course-table tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+/* === Crash Course: Setup Day extras === */
+.callout {
+  margin: 12px 0;
+  padding: 10px 12px;
+  border: 1px dashed var(--card-border);
+  border-radius: 10px;
+  background: var(--tab-bg);
+}
+
+.diagram {
+  margin: 1.2rem 0;
+  text-align: center;
+}
+.diagram img {
+  max-width: 100%;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 0 18px rgba(0,0,0,0.3);
+}
+.diagram .caption {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-top: 6px;
+  font-style: italic;
+}
+
 /* nav row: restart (left) + next (right) */
 .nav-row {
   display: flex;
