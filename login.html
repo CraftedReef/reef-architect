@@ -40,7 +40,7 @@
       const correct = "r33fbu1lder";  // <--- change this password
       if(input === correct){
         sessionStorage.setItem("reefAuth", "ok");
-        window.location.href = "index.html";
+        window.location.href = "welcome.html";
       } else {
         document.getElementById('msg').textContent = "Incorrect password.";
       }
@@ -52,7 +52,7 @@
     e.preventDefault();
     sessionStorage.setItem('reefAuth', 'ok');
     // go to home by default; users can then click Review
-    location.href = 'index.html';
+    location.href = 'welcome.html';
   });
 </script>
 </body>
