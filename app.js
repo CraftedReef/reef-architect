@@ -469,6 +469,7 @@ function init(){
 
   initGlossary();
   initExport();
+  runQuickStartFromURL();
 }
 
 function bindInputs(){
@@ -1610,6 +1611,31 @@ function initExport(){
   window.addEventListener('afterprint', ()=>{
     document.getElementById('print-orientation')?.remove();
   });
+}
+// --- Handle Welcome → Builder deep-links (#start, #quick=slug) ---
+function runQuickStartFromURL(){
+  const hash = (location.hash || "").slice(1); // strip leading '#'
+  if (!hash) return;
+
+  // Open Stage 1
+  if (hash === "start") {
+    switchStage('1');
+    return;
+  }
+
+  // Quick-start presets (e.g., index.html#quick=lps90)
+  if (hash.startsWith("quick=")) {
+    const slug = decodeURIComponent(hash.split("=").slice(1).join("="));
+
+    // Prefer your existing quick start function if present
+    if (typeof window.applyQuickStart === "function") {
+      window.applyQuickStart(slug);
+      return;
+    }
+
+    // Fallback: if no handler exists, just open Stage 1
+    switchStage('1');
+  }
 }
 
 // ---- Boot: wait for Google Sheets before starting ----

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="robots" content="noindex, nofollow">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome — Reef Architect</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <script>
+    // Keep the simple gate, same as other pages.
+    if (sessionStorage.getItem('reefAuth') !== 'ok') {
+      location.href = 'login.html';
+    }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img src="Images/logo.png" alt="Reef Architect logo" style="height:40px; vertical-align:middle; border-radius:8px;">
+      <span class="subtitle">Plan • Build • Thrive</span>
+    </div>
+    <nav class="controls">
+      <a href="index.html" class="cta">Aquarium Builder</a>
+      <a href="crash-course.html" class="secondary">Crash Course</a>
+      <a href="about.html" class="secondary">About</a>
+      <a href="feedback.html" class="secondary">Review</a>
+    </nav>
+  </header>
+
+  <main id="app">
+    <!-- Welcome -->
+    <section id="stage-0" class="stage visible">
+      <div class="card">
+        <h2>Welcome to Reef Architect</h2>
+        <p>
+  Build your reef step-by-step with volume-aware gear picks, capacity guidance, and compatibility notes.
+  If you’re brand new, use our <a href="crash-course.html" class="link">Crash Course into Reefing</a> for a quick,
+  eight-phase overview of planning, setup, cycling, stocking, and care—then come back here to build with confidence.
+</p>
+
+        <ul>
+          <li><b>Beginner</b> mode keeps choices simple and safe. <b>Experienced</b> unlocks everything.</li>
+          <li>Equipment lists auto-filter to your tank volume.</li>
+          <li>Stocking “<b>Capacity</b>” meter helps avoid overcrowding.</li>
+          <li>Summary includes color-coded compatibility notes and suggestions.</li>
+        </ul>
+        <a href="index.html#start" class="btn primary">Start →</a>
+<a href="crash-course.html" class="btn secondary icon-btn">Crash Course →</a>
+      </div>
+
+      <!-- Quick Start on Welcome -->
+      <section class="card" id="quickStart">
+        <h2>Just do it for me</h2>
+        <div class="grid grid-5">
+          <div class="qs-card">
+            <h3>20g Softie Nano</h3><p>Low-maintenance corals and peaceful fish.</p>
+            <a class="btn primary" href="index.html#quick=nano20">Go →</a>
+          </div>
+          <div class="qs-card">
+            <h3>32g BioCube Softie</h3><p>Classic AIO starter with soft corals.</p>
+            <a class="btn primary" href="index.html#quick=biocube32">Go →</a>
+          </div>
+          <div class="qs-card">
+            <h3>40g Mixed Reef</h3><p>Balanced LPS/Softies with moderate gear.</p>
+            <a class="btn primary" href="index.html#quick=mixed40">Go →</a>
+          </div>
+          <div class="qs-card">
+            <h3>75g FOWLR</h3><p>Fish-focused setup, simple lighting needs.</p>
+            <a class="btn primary" href="index.html#quick=fowlr75">Go →</a>
+          </div>
+          <div class="qs-card">
+            <h3>90g LPS Reef</h3><p>Roomy tank with moderate flow & light.</p>
+            <a class="btn primary" href="index.html#quick=lps90">Go →</a>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>© 2025 Reef Architect</span>
+  </footer>
+</body>
+</html>

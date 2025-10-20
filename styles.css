@@ -136,6 +136,47 @@ button.icon-btn {
   color: var(--text);
   border-radius: 10px; padding: 9px 12px; cursor: pointer;
 }
+
+a.btn {
+  display: inline-block;
+  text-decoration: none;
+  font: inherit;
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+/* Primary variant (matches button.primary) */
+a.btn.primary {
+  background: var(--primary);
+  color: #fff !important;
+  border: 1px solid var(--primary-700);
+}
+a.btn.primary:hover {
+  background: var(--primary-600);
+}
+
+/* Secondary variant (matches button.secondary) */
+a.btn.secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--card-border);
+  padding: 9px 12px;
+}
+a.btn.secondary:hover {
+  border-color: var(--outline);
+  text-decoration: none;
+}
+
+/* Icon variant (matches button.icon-btn) */
+a.btn.icon-btn {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--card-border);
+  padding: 9px 12px;
+  border-radius: 10px;
+}
+
 /* --- CTA link button (for Crash Course in header) --- */
 a.cta {
   background: var(--primary);

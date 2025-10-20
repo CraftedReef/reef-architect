@@ -3,12 +3,10 @@
 <head>
   <script>
     // Keep this page behind your simple gate, just like About/Index.
-    <script>
-  // Keep this page behind your simple gate, just like About/Index.
-  if (sessionStorage.getItem('reefAuth') !== 'ok') {
-    location.href = 'login.html';
-  }
-</script>
+    if (sessionStorage.getItem('reefAuth') !== 'ok') {
+      location.href = 'login.html';
+    }
+  </script>
   <meta name="robots" content="noindex, nofollow" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -38,7 +36,7 @@
   <span class="subtitle">Plan • Build • Thrive</span>
 </div>
     <nav class="controls">
-      <a href="index.html" class="secondary">Home</a>
+      <a href="welcome.html" class="secondary">Home</a>
       <a href="crash-course.html" class="cta">Crash Course</a>
       <a href="about.html" class="secondary">About</a>
       <a href="feedback.html" class="secondary">Review</a>
@@ -53,7 +51,7 @@
       </p>
     </section>
 
-    <form id="reviewForm" class="questions" autocomplete="on">
+    <form id="reviewForm" class="questions" autocomplete="on" method="post" action="#">
       <section class="card">
         <h3>Your Info</h3>
         <div class="grid-2-form">
@@ -105,6 +103,7 @@
             <label><input type="checkbox" name="sections_used" value="Stage 3"> Corals</label>
             <label><input type="checkbox" name="sections_used" value="Stage 4"> Summary</label>
             <label><input type="checkbox" name="sections_used" value="Crash Course"> Crash Course</label>
+            <label><input type="checkbox" name="sections_used" value="Visualizer"> Visualizer</label>
             <label><input type="checkbox" name="sections_used" value="Glossary"> Glossary</label>
           </div>
         </div>
@@ -176,166 +175,149 @@
     <span>© 2025 Reef Architect</span>
   </footer>
 
-  <script>
-   
-    // ---------- EmailJS init ----------
-    // 1) Replace with your EmailJS public key:
+    <script>
+    // EmailJS init (keep your real public key)
     emailjs.init({ publicKey: "aTTbQPfXEePcBPeok" });
 
-    const form = document.getElementById('reviewForm');
+    // Ensure the handler attaches before any submit can navigate away
+    window.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('reviewForm');
+      if (!form) { console.error('reviewForm not found'); return; }
 
-    form.addEventListener('submit', async (e)=>{
-      e.preventDefault();
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        console.log('[Feedback] submit handler fired');
 
-      const fd = new FormData(form);
-      // Collect checkbox group into a single comma string:
-      const sections = Array.from(document.querySelectorAll('#sectionsWrap input[name="sections_used"]:checked'))
-        .map(x=>x.value).join(', ');
+        // -------- collect values --------
+        const fd = new FormData(form);
+        const sections = Array.from(document.querySelectorAll('#sectionsWrap input[name="sections_used"]:checked'))
+          .map(x => x.value).join(', ');
 
-      // Template params expected by your EmailJS template (names must match):
-      const params = {
-        name: fd.get('name') || '',
-        email: fd.get('email') || '',
-        role: fd.get('role') || '',
-        device: fd.get('device') || '',
-        visit_length: fd.get('visit_length') || '',
-        sections_used: sections || '',
-        ui_clarity: fd.get('ui_clarity') || '',
-        mobile_usability: fd.get('mobile_usability') || '',
-        performance: fd.get('performance') || '',
-        content_helpfulness: fd.get('content_helpfulness') || '',
-        nps: fd.get('nps') || '',
-        bugs: fd.get('bugs') || '',
-        top_improvements: fd.get('top_improvements') || '',
-        loved: fd.get('loved') || '',
-        other: fd.get('other') || '',
-        follow_up_ok: fd.get('follow_up_ok') || '',
-        quote_ok: fd.get('quote_ok') || '',
-        submitted_at: new Date().toLocaleString()
-      };
+        const params = {
+          name: fd.get('name') || '',
+          email: fd.get('email') || '',
+          role: fd.get('role') || '',
+          device: fd.get('device') || '',
+          visit_length: fd.get('visit_length') || '',
+          sections_used: sections || '',
+          ui_clarity: fd.get('ui_clarity') || '',
+          mobile_usability: fd.get('mobile_usability') || '',
+          performance: fd.get('performance') || '',
+          content_helpfulness: fd.get('content_helpfulness') || '',
+          nps: fd.get('nps') || '',
+          bugs: fd.get('bugs') || '',
+          top_improvements: fd.get('top_improvements') || '',
+          loved: fd.get('loved') || '',
+          other: fd.get('other') || '',
+          follow_up_ok: fd.get('follow_up_ok') || '',
+          quote_ok: fd.get('quote_ok') || '',
+          submitted_at: new Date().toLocaleString()
+        };
 
-      // 1) Create PDF locally for the reviewer
-      try {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ unit: 'pt', format: 'letter' });
-        const margin = 54; let y = margin;
+        // -------- 1) Create & SAVE the PDF immediately (sync) --------
+        try {
+          if (!window.jspdf || !window.jspdf.jsPDF) throw new Error('jsPDF not loaded');
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+          const margin = 54; let y = margin;
 
-        doc.setFont('helvetica','bold'); doc.setFontSize(16);
-        doc.text('Reef Architect — Site Review', margin, y); y += 22;
-        doc.setFont('helvetica','normal'); doc.setFontSize(10);
-        doc.text(`Submitted: ${params.submitted_at}`, margin, y); y += 18;
+          doc.setFont('helvetica','bold'); doc.setFontSize(16);
+          doc.text('Reef Architect — Site Review', margin, y); y += 22;
+          doc.setFont('helvetica','normal'); doc.setFontSize(10);
+          doc.text(`Submitted: ${params.submitted_at}`, margin, y); y += 18;
 
-        function block(h, v){
-          doc.setFont('helvetica','bold'); doc.text(h, margin, y); y += 14;
-          doc.setFont('helvetica','normal');
-          const text = (v || '—') + '';
-          const lines = doc.splitTextToSize(text, 504);
-          lines.forEach(line=>{ doc.text(line, margin, y); y += 12; });
-          y += 6;
-          if(y > 700){ doc.addPage(); y = margin; }
+          function block(h, v){
+            doc.setFont('helvetica','bold'); doc.text(h, margin, y); y += 14;
+            doc.setFont('helvetica','normal');
+            (doc.splitTextToSize((v || '—') + '', 504)).forEach(line => { doc.text(line, margin, y); y += 12; });
+            y += 6; if (y > 700) { doc.addPage(); y = margin; }
+          }
+
+          block('Name', params.name);
+          block('Email', params.email);
+          block('Role', params.role);
+          block('Device', params.device);
+          block('Visit Length', params.visit_length);
+          block('Sections Used', params.sections_used);
+          block('UI Clarity (1–5)', params.ui_clarity);
+          block('Mobile Usability (1–5)', params.mobile_usability);
+          block('Performance (1–5)', params.performance);
+          block('Content Helpfulness (1–5)', params.content_helpfulness);
+          block('Recommend (0–10)', params.nps);
+          block('Bugs', params.bugs);
+          block('Top Improvements', params.top_improvements);
+          block('Loved', params.loved);
+          block('Other', params.other);
+          block('Follow Up OK', params.follow_up_ok);
+          block('Quote OK', params.quote_ok);
+
+          const who = (params.name || 'Anonymous').replace(/[^a-z0-9_\-]+/gi,'_');
+          const ts  = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
+          const fname = `ReefArchitect_Review_${who}_${ts}.pdf`;
+          console.log('[Feedback] saving PDF:', fname);
+          doc.save(fname); // download fires under the click gesture
+        } catch (err) {
+          console.error('PDF creation error:', err);
         }
 
-        block('Name', params.name);
-        block('Email', params.email);
-        block('Role', params.role);
-        block('Device', params.device);
-        block('Visit Length', params.visit_length);
-        block('Sections Used', params.sections_used);
+        // -------- 2) Send EmailJS (next tick so download isn’t blocked) --------
+        setTimeout(async () => {
+          try {
+            const SERVICE_ID  = "service_olr6wku";   // your real service id
+            const TEMPLATE_ID = "template_70jp328";  // your real template id
+            let sent = false;
 
-        block('UI Clarity (1–5)', params.ui_clarity);
-        block('Mobile Usability (1–5)', params.mobile_usability);
-        block('Performance (1–5)', params.performance);
-        block('Content Helpfulness (1–5)', params.content_helpfulness);
-        block('Recommend (0–10)', params.nps);
+            try {
+              const { jsPDF } = window.jspdf;
+              const re = new jsPDF({ unit: 'pt', format: 'letter' });
+              const m2 = 54; let y2 = m2;
+              re.setFont('helvetica','bold'); re.setFontSize(16);
+              re.text('Reef Architect — Site Review', m2, y2); y2 += 22;
+              re.setFont('helvetica','normal'); re.setFontSize(10);
+              re.text(`Submitted: ${params.submitted_at}`, m2, y2); y2 += 18;
 
-        block('Bugs', params.bugs);
-        block('Top Improvements', params.top_improvements);
-        block('Loved', params.loved);
-        block('Other', params.other);
-        block('Follow Up OK', params.follow_up_ok);
-        block('Quote OK', params.quote_ok);
+              function blk(h,v){ re.setFont('helvetica','bold'); re.text(h, m2, y2); y2 += 14;
+                re.setFont('helvetica','normal');
+                re.splitTextToSize((v||'—')+'', 504).forEach(line => { re.text(line, m2, y2); y2 += 12; });
+                y2 += 6; if (y2 > 700) { re.addPage(); y2 = m2; }
+              }
+              blk('Name', params.name); blk('Email', params.email); blk('Role', params.role);
+              blk('Device', params.device); blk('Visit Length', params.visit_length);
+              blk('Sections Used', params.sections_used);
+              blk('UI Clarity (1–5)', params.ui_clarity);
+              blk('Mobile Usability (1–5)', params.mobile_usability);
+              blk('Performance (1–5)', params.performance);
+              blk('Content Helpfulness (1–5)', params.content_helpfulness);
+              blk('Recommend (0–10)', params.nps);
+              blk('Bugs', params.bugs); blk('Top Improvements', params.top_improvements);
+              blk('Loved', params.loved); blk('Other', params.other);
+              blk('Follow Up OK', params.follow_up_ok); blk('Quote OK', params.quote_ok);
 
-        const nameSafe = (params.name || 'Anonymous').toString().replace(/[^a-z0-9_\-]+/gi,'_');
-        const ts = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
-        doc.save(`ReefArchitect_Review_${nameSafe}_${ts}.pdf`);
-      } catch(err){
-        console.error('PDF error', err);
-      }
+              const base64 = re.output('datauristring').split(',')[1];
+              const who2 = (params.name || 'Anonymous').replace(/[^a-z0-9_\-]+/gi,'_');
+              const ts2  = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
+              const fname2 = `ReefArchitect_Review_${who2}_${ts2}.pdf`;
 
-// 2) Send email via EmailJS (try with PDF attachment; fallback to text-only)
-try {
-  const SERVICE_ID = "service_xxxxxxxx";     // <-- your real Service ID
-  const TEMPLATE_ID = "template_70jp328";    // <-- your real Template ID
+              await emailjs.send(SERVICE_ID, TEMPLATE_ID, { ...params, attachments: [{ name: fname2, data: base64 }] });
+              sent = true;
+            } catch (attachErr) {
+              console.warn('Attachment failed; sending text-only.', attachErr);
+            }
 
-  // Build a filename and a base64 string for the PDF we already generated
-  const fileName = (()=>{
-    const nameSafe = (params.name || 'Anonymous').toString().replace(/[^a-z0-9_\-]+/gi,'_');
-    const ts = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
-    return `ReefArchitect_Review_${nameSafe}_${ts}.pdf`;
-  })();
+            if (!sent) await emailjs.send(SERVICE_ID, TEMPLATE_ID, params);
 
-  // jsPDF: get a base64 string of the PDF (no prefix)
-  const pdfDataUri = window.jspdf?.jsPDF ? null : null; // guard (jsPDF already loaded)
-  // Recreate the PDF to capture as base64 without changing the already-downloaded file
-  const { jsPDF } = window.jspdf;
-  const reDoc = new jsPDF({ unit: 'pt', format: 'letter' });
-  // (Re-print the same blocks for the attachment)
-  const margin2 = 54; let y2 = margin2;
-  reDoc.setFont('helvetica','bold'); reDoc.setFontSize(16);
-  reDoc.text('Reef Architect — Site Review', margin2, y2); y2 += 22;
-  reDoc.setFont('helvetica','normal'); reDoc.setFontSize(10);
-  reDoc.text(`Submitted: ${params.submitted_at}`, margin2, y2); y2 += 18;
-  function writeBlock(h, v){
-    reDoc.setFont('helvetica','bold'); reDoc.text(h, margin2, y2); y2 += 14;
-    reDoc.setFont('helvetica','normal');
-    const txt = (v || '—') + '';
-    const lines = reDoc.splitTextToSize(txt, 504);
-    lines.forEach(line=>{ reDoc.text(line, margin2, y2); y2 += 12; });
-    y2 += 6;
-    if(y2 > 700){ reDoc.addPage(); y2 = margin2; }
-  }
-  writeBlock('Name', params.name);
-  writeBlock('Email', params.email);
-  writeBlock('Role', params.role);
-  writeBlock('Device', params.device);
-  writeBlock('Visit Length', params.visit_length);
-  writeBlock('Sections Used', params.sections_used);
-  writeBlock('UI Clarity (1–5)', params.ui_clarity);
-  writeBlock('Mobile Usability (1–5)', params.mobile_usability);
-  writeBlock('Performance (1–5)', params.performance);
-  writeBlock('Content Helpfulness (1–5)', params.content_helpfulness);
-  writeBlock('Recommend (0–10)', params.nps);
-  writeBlock('Bugs', params.bugs);
-  writeBlock('Top Improvements', params.top_improvements);
-  writeBlock('Loved', params.loved);
-  writeBlock('Other', params.other);
-  writeBlock('Follow Up OK', params.follow_up_ok);
-  writeBlock('Quote OK', params.quote_ok);
-
-  const base64NoPrefix = reDoc.output('datauristring').split(',')[1];
-
-  let sent = false;
-  try {
-    // Some EmailJS plans support base64 attachments via the `attachments` param.
-    await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
-      ...params,
-      attachments: [{
-        name: fileName,
-        data: base64NoPrefix
-      }]
+            form.style.display = 'none';
+            const ty = document.getElementById('thankyou');
+            if (ty) ty.style.display = 'block';
+            console.log('[Feedback] Email sent ✓');
+          } catch (e) {
+            console.error('EmailJS error:', e);
+            alert('Thanks — your PDF downloaded. Email send failed; check Console for the EmailJS error.');
+          }
+        }, 0);
+      });
     });
-    sent = true;
-  } catch (attachErr) {
-    console.warn('Attachment send failed, falling back to text-only email', attachErr);
-  }
+  </script>
+</body>
+</html>
 
-  if (!sent) {
-    await emailjs.send(SERVICE_ID, TEMPLATE_ID, params);
-  }
-
-  form.style.display = 'none';
-  document.getElementById('thankyou').style.display = 'block';
-} catch (e2) {
-  console.error(e2);
-  alert('Email send error — please try again.');
-}

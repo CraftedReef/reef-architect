@@ -60,7 +60,7 @@
   <span class="subtitle">Plan • Build • Thrive</span>
 </div>
     <div class="controls">
-      <a href="index.html" class="secondary">← Aquarium Builder</a>
+      <a href="welcome.html" class="cta">Aquarium Builder</a>
       <button id="openGlossary" class="icon-btn">Glossary</button>
       </div>
   </header>
@@ -90,7 +90,7 @@
       <button class="tab" data-target="#tab-flow">Flow, Filtration & Nutrients</button>
       <button class="tab" data-target="#tab-light">Lighting & PAR On-Ramp</button>
       <button class="tab" data-target="#tab-stock">Stocking & Acclimation</button>
-      <button class="tab" data-target="#tab-care">Maintenance & Upgrades</button>
+      <button class="tab" data-target="#tab-maintenance">Maintenance & Upgrades</button>
     </section>
 
     <!-- Panels -->
@@ -111,7 +111,7 @@
     <h4>2. Choosing Your Tank Type</h4>
     <p>
       Start small enough to manage, but large enough to be forgiving. For most beginners, a
-      <b>20–40 gallon All-In-One (AIO)</b> tank is ideal. It’s compact, tidy, and includes built-in chambers for your heater, pump, and filter media — no plumbing required.
+      <b>20–40 gallon All-In-One (AIO)</b> tank is ideal. It’s compact, tidy, and includes built-in chambers for your heater, pump, and filter media. No plumbing required.
     </p>
     <p>
       If you have more room and want flexibility, consider a <b>sump system</b>. A sump is a second tank hidden inside the stand that holds extra water volume and equipment. It keeps the display clean, increases stability, and allows for add-ons like a skimmer or refugium. The trade-off is higher cost and a bit more setup work.
@@ -119,7 +119,7 @@
 
     <h4>3. Planning Your Budget</h4>
     <p>
-      It’s tempting to start buying immediately — but a smart budget avoids wasted money and mismatched parts. Divide your plan into categories:
+      It’s tempting to start buying immediately, but a smart budget avoids wasted money and mismatched parts. Divide your plan into categories:
     </p>
 <div class="budget-table-wrapper">
   <table class="budget-table">
@@ -170,7 +170,7 @@
   </table>
 </div>
 
-<p class="budget-note">
+<p class="muted small">
   Buy the best-quality gear you can reasonably afford. Reliability matters more than brand,
   and a quiet, efficient system will save you endless headaches.
 </p>
@@ -727,94 +727,456 @@ A second group converts nitrite into nitrate (NO₃⁻), which is far less harmf
 </section>
 
 
-    <section class="stage tab-panel" id="tab-flow">
-      <div class="card">
-        <h3>Flow, Filtration & Nutrients</h3>
-<p class="section-why">Why this matters: flow keeps detritus suspended for removal and delivers oxygen to corals. Target total in-tank flow of <b>10–20×</b> (soft/LPS) or <b>30–60×</b> (SPS).</p>
-        <p>
-          Corals breathe with your flow. Aim for broad, randomized movement that sweeps detritus off the rock and
-          keeps water exchanging across coral surfaces without blasting tissue. Mechanical filtration (floss or socks)
-          polishes the water; a skimmer adds gas exchange and nutrient export as bioload grows. Many tanks thrive with
-          simple export—regular water changes and prudent feeding—while others add refugiums or reactors later.
-          Pick nutrient targets you can actually maintain and stick to them; consistent nitrate and phosphate levels
-          make coral coloration and growth far more predictable.
-        </p>
-        <div class="recap">
-          <h4>Recap</h4>
-          <ul>
-            <li>Randomized, non-laminar flow; no dead spots.</li>
-            <li>Mechanical filter → optional skimmer → optional refugium/reactors.</li>
-            <li>Set realistic NO₃/PO₄ targets and maintain them consistently.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+<section class="stage tab-panel" id="tab-flow">
+  <div class="card">
+    <h3>Flow, Filtration &amp; Nutrients</h3>
 
-    <section class="stage tab-panel" id="tab-light">
-      <div class="card">
-        <h3>Lighting & PAR On-Ramp</h3>
-<p class="section-why">Why this matters: corals photosynthesize. Proper PAR and a slow ramp prevent bleaching while still fueling growth.</p>
-        <p>
-          Light is food for corals—and too much, too fast, burns them. Start low and ramp up slowly.
-          Target ranges (as general guides): softies under ~100–150 PAR, many LPS around ~75–200 PAR,
-          and SPS commonly ~200–350+ PAR depending on species and placement. Keep spectrum stable; resist the urge
-          to chase “looks” daily. A consistent photoperiod and gradual intensity changes do more for coral health
-          than endless schedule tweaks. If you can borrow a PAR meter, do it—it replaces guesswork with confidence.
-        </p>
-        <div class="recap">
-          <h4>Recap</h4>
-          <ul>
-            <li>Ramp intensity slowly; maintain a consistent photoperiod.</li>
-            <li>Softies ~&lt;100–150 PAR; LPS ~75–200; SPS ~200–350+ (rule-of-thumb).</li>
-            <li>Keep spectrum stable; measure PAR if possible.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+    <p class="section-why">
+   Flow and filtration work together to keep your tank alive. Flow brings oxygen to every coral, sweeps waste toward your filters, and prevents “dead zones” where detritus settles and decays. Filtration then removes that waste before it can rot and release nutrients.
+Stable, predictable nutrient levels keep corals colorful and algae under control.
+If water movement is the reef’s pulse, filtration is its liver.
+    </p>
+
+    <h4>1. Understanding Flow</h4>
+    <p>Flow is more than water movement, it’s how the reef breathes.
+Corals exchange oxygen and nutrients through the thin boundary layer of water that touches their tissue. Without proper flow, that layer becomes stagnant and suffocates coral cells.</p>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Coral Type</th><th>Flow Goal</th><th>Example Setup</th></tr></thead>
+        <tbody>
+          <tr><td>Soft / LPS</td><td>10–20× turnover</td><td>Two opposing wave pumps alternating sides.</td></tr>
+          <tr><td>SPS</td><td>30–60× turnover</td><td>Four pumps or a gyre system creating random turbulence.</td></tr>
+          <tr><td>Fish-Only</td><td>5–10× turnover</td><td>One return pump + small circulation pump.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  <p class="small muted" class="caption"><i>Example: A 40-gallon LPS reef should circulate roughly 400–800 gallons per hour total inside the tank.
+That means two 400 GPH pumps are better than one 800 GPH pump. For this setup,  multiple sources create randomness. </i></p>
+
+    <h4>2. Flow Patterns</h4>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Pattern</th><th>Description</th><th>Best For</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Laminar</td><td>Single constant stream.</td><td>Frag tanks.</td><td>Can damage coral tissue if too direct.</td></tr>
+          <tr><td>Randomized / Gyre</td><td>Alternating, sweeping motion.</td><td>All corals.</td><td>Mimics natural reef surge; prevents dead spots.</td></tr>
+          <tr><td>Pulse / Wave</td><td>On/off rhythm.</td><td>LPS, softies.</td><td>Creates gentle sway; watch for surface splash.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  <p class="small muted" class="caption"><i>Tip: point your wave pumps slightly upward toward the surface. This breaks the surface tension in the water as well as any surface films to improve gas exchange. Not only will this provide more oxygen for you tank but it was also help raise your PH levels if they're low.</i></p>
+
+    <h4>3. Filtration Layers</h4>
+<p>Filtration is how the tank removes or neutralizes waste before it poisons the system.
+Think of it as three layers working together.</p>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Type</th><th>Purpose</th><th>Examples</th></tr></thead>
+        <tbody>
+          <tr><td>Mechanical</td><td>Traps debris and detritus.</td><td>Filter floss, socks, rollers.</td></tr>
+          <tr><td>Biological</td><td>Hosts bacteria that process waste.</td><td>Rock, bio-media, sand.</td></tr>
+          <tr><td>Chemical</td><td>Removes dissolved pollutants.</td><td>Carbon, GFO, resins.</td></tr>
+        </tbody>
+      </table>
+    </div>
+<p class="small muted" class="caption"><i>Ideal Filtration order: Intake → Mechanical → Skimmer → (Optional Refugium) → Return Pump</i></p>
+    <h4>4. Protein Skimmer</h4>
+    <p>
+  A protein skimmer uses bubbles to pull dissolved waste and organics out of the water before they break down.
+It also boosts oxygen exchange which iscrucial as bioload grows.
+    </p>
+    <p>
+      <b>When you should add a skimmer:</b>
+    </p>
+
+    <ol>
+      <li>After your tank is cycled and producing measurable nitrate.</li>
+      <li>If you feed heavily or notice surface film or rising nutrients.</li>
+      <li>In nano tanks, water changes alone may suffice initially.</li>
+    </ol>
+
+    <h4>5. Nutrient Balance</h4>
+    <p>Corals need nitrate (NO₃) and phosphate (PO₄) in small amounts. Zero nutrients starve corals, while excess fuels algae.
+The goal is balance, not total removal. Other important nutrients are Calcium (Ca), Alkalinity (dKH) and Magnesium (Mg)</p>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Parameter</th><th>Target Range</th><th>Source</th><th>Control</th></tr></thead>
+        <tbody>
+          <tr><td>Nitrate (NO₃)</td><td>2–20 ppm</td><td>Fish waste, food</td><td>Water changes, refugium, dosing.</td></tr>
+          <tr><td>Phosphate (PO₄)</td><td>0.01–0.2 ppm</td><td>Food, leaching rock</td><td>GFO, water changes, macroalgae.</td></tr>
+          <tr><td>Calcium (Ca)</td><td>350–4500 ppm</td><td>Salt, calcium reactor, dosing</td><td>Coral consumption, water changes</td></tr>
+         <tr><td>Alkalinity (dKH)</td><td>7–12 ppm</td><td>Salt, Kalkwasser</td><td>Coral consumption, water changes.</td></tr>
+          <tr><td>Magnesium (Mg)</td><td>1250-1350 ppm</td><td>Salt, dosing</td><td>Coral consumption, water changes.</td></tr>
+        </tbody>
+      </table>
+    </div>
+<p class="small muted" class="caption"> <i>Try to shoot for a ratio of 100:1. If your NO₃ is at 5ppm then your PO₄ should be .05ppm. Ca, dKH & Mg go hand in hand. If you are on the higher range of Ca then you also want dKH and Mg on the higher side of the range.</i></p>
+<p>Consistency > Perfection
+Don’t chase numbers daily. Track weekly trends and correct gradually. A stable nutrient baseline produces predictable coral color and growth.</p>
+    <h4>6. Optional Upgrades</h4>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Add-On</th><th>Purpose</th><th>Benefit</th></tr></thead>
+        <tbody>
+          <tr><td>Refugium</td><td>A small “safe zone” in your sump where macroalgae (like chaeto) and microfauna like copepods grow.</td><td>Removes nitrate &amp; phosphate naturally.</td></tr>
+          <tr><td>GFO Reactor</td><td>Uses Granular Ferric Oxide to bind phosphates.</td><td>Reduces algae growth; clarifies water.</td></tr>
+          <tr><td>Carbon Reactor</td><td>Removes discoloration and toxins released by corals.</td><td>Removes toxins &amp; discoloration.</td></tr>
+        </tbody>
+      </table>
+    </div>
+<p class="small muted" class="caption"><i> Tip: Add these only after your tank has matured and your nutrients are stable. Early over-filtration can and will starve your corals of needed nutrients.</i></p>
+    <h4>7. Common Terms</h4>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+        <tbody>
+          <tr><td>Turnover Rate</td><td>Times per hour your tank’s water volume circulates.</td></tr>
+          <tr><td>Dead Spot</td><td>Area with no flow where debris collects.</td></tr>
+          <tr><td>Laminar Flow</td><td>Straight, one-direction current.</td></tr>
+          <tr><td>Random Flow</td><td>Ever-changing currents; prevents stagnation.</td></tr>
+          <tr><td>Bioload</td><td>Total waste from fish and corals.</td></tr>
+          <tr><td>Refugium</td><td>Low-flow sump zone for macroalgae or pods.</td></tr>
+          <tr><td>Reactor</td><td>Chamber that forces water through filter media.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="recap">
+      <h4>Recap</h4>
+      <ul>
+        <li>Target <b>10–20×</b> flow for soft/LPS, <b>30–60×</b> for SPS.</li>
+        <li>Use <b>randomized, non-laminar flow</b> to avoid dead spots.</li>
+        <li>Filter order: mechanical → skimmer → optional refugium/reactors → return.</li>
+        <li>Keep nutrients steady: NO₃ = 5–20 ppm, PO₄ = 0.03–0.1 ppm.</li>
+        <li>Clean filter media often; consistency keeps the reef healthy.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<section class="stage tab-panel" id="tab-light">
+  <div class="card">
+    <h3>Lighting &amp; Par</h3>
+
+    <p class="section-why">
+      Light fuels photosynthesis in corals and brings out color in fish.
+      Reef tanks depend on PAR for coral growth, while FOWLR systems use it mainly for aesthetics and balance.
+    </p>
+
+    <h4>1. Lighting Goals by Tank Type</h4>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Tank Type</th><th>Purpose</th><th>Typical PAR</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>FOWLR</td><td>Show fish color, manage algae.</td><td>30–75</td><td>Low intensity; daylight color (10 K–14 K).</td></tr>
+          <tr><td>Soft Coral Reef</td><td>Moderate light for photosynthesis.</td><td>75–150</td><td>Forgiving for beginners.</td></tr>
+          <tr><td>LPS Reef</td><td>Fuel growth and maintain color.</td><td>100–200</td><td>Mid-light areas.</td></tr>
+          <tr><td>SPS Reef</td><td>High, stable PAR for growth.</td><td>200–350+</td><td>Upper rock zones.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>2. Spectrum Explained</h4>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Zone</th><th>Wavelength (nm)</th><th>Color</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td>Blue-Violet</td><td>400–500</td><td>Deep blue</td><td>Main photosynthetic band.</td></tr>
+          <tr><td>Cyan-Green</td><td>500–570</td><td>Teal-green</td><td>Balances visuals; enhances fish hues.</td></tr>
+          <tr><td>Red</td><td>620–700</td><td>Deep red</td><td>Too much = algae bloom.</td></tr>
+          <tr><td>UV</td><td>380–400</td><td>Violet</td><td>Coral fluorescence; minimal use in FOWLR.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="diagram">
+      <img src="Images/spectrum.png" alt="Diagram showing RedSea RL90 Par zones">
+      <p class="caption">Figure — Typical light spectrum strengths used for coral growth and visibility.</p>
+    </div>
+
+    <h4>3. Sample Light Schedules</h4>
+    <p><b>Reef Tank (Soft/LPS/SPS)</b></p>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Phase</th><th>Time</th><th>Intensity</th><th>Spectrum</th></tr></thead>
+        <tbody>
+          <tr><td>Sunrise</td><td>9–11 AM</td><td>0→60%</td><td>Blue heavy</td></tr>
+          <tr><td>Midday</td><td>11 AM–5 PM</td><td>70–100%</td><td>Balanced blue/white</td></tr>
+          <tr><td>Sunset</td><td>5–8 PM</td><td>100→0%</td><td>Blue fade</td></tr>
+          <tr><td>Moonlight</td><td>8 PM–12 AM</td><td>1–5%</td><td>Royal blue</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><b>FOWLR Tank</b></p>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Phase</th><th>Time</th><th>Intensity</th><th>Spectrum</th></tr></thead>
+        <tbody>
+          <tr><td>Morning</td><td>9–10 AM</td><td>0→40%</td><td>White/blue mix</td></tr>
+          <tr><td>Viewing Period</td><td>10 AM–7 PM</td><td>50–60%</td><td>10 K–14 K daylight</td></tr>
+          <tr><td>Evening Fade</td><td>7–8 PM</td><td>60→0%</td><td>Blue only</td></tr>
+          <tr><td>Lights Out</td><td>8 PM+</td><td>Off</td><td>Fish rest / algae control</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>4. Mounting &amp; Spread</h4>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Fixture</th><th>Height</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>LED Panel</td><td>8–10 in</td><td>Adjustable spectrum, great shimmer.</td></tr>
+          <tr><td>T5 / Hybrid</td><td>4–6 in</td><td>Uniform light, less shadowing.</td></tr>
+          <tr><td>Pendant / Nano LED</td><td>6–8 in</td><td>Ideal for smaller tanks.</td></tr>
+          <tr><td>FOWLR LED Bar</td><td>3–5 in</td><td>Simple even lighting; focus on color balance.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="diagram">
+      <img src="Images/RL90par.jpg" alt="Diagram showing RedSea RL90 Par zones">
+      <p class="caption">Figure — PAR gradient: FOWLR low (50), softies mid (100), SPS top (300+). FOWLR uses lower, even daylight for color and algae control.</p>
+    </div>
+    <h4>5. Acclimation</h4>
+    <ul class="list">
+      <li><span><b>Corals:</b> Start 25–30% below target PAR, increase 5% every few days.</span></li>
+      <li><span><b>Fish:</b> Provide shaded areas; bright light can stress new arrivals.</span></li>
+      <li><span>Use timers or controllers for smooth sunrise/sunset transitions.</span></li>
+    </ul>
+
+    <h4>6. Key Terms</h4>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+        <tbody>
+          <tr><td>PAR</td><td>Photosynthetically Active Radiation — usable light for photosynthesis.</td></tr>
+          <tr><td>Spectrum</td><td>Blend of wavelengths that determines color and energy.</td></tr>
+          <tr><td>Photoperiod</td><td>Duration of light exposure each day.</td></tr>
+          <tr><td>Bleaching</td><td>Coral loses symbiotic algae from excess light or heat.</td></tr>
+          <tr><td>Kelvin (K)</td><td>Color temperature; lower = warmer white, higher = bluer reef hue.</td></tr>
+          <tr><td>FOWLR</td><td>Fish Only With Live Rock; uses light for aesthetics, not coral growth.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="recap">
+      <h4>Recap</h4>
+      <ul>
+        <li><b>FOWLR:</b> Light for color and algae control, 30–75 PAR.</li>
+        <li><b>Reef:</b> Start low, ramp slowly; Soft 75–150 PAR, LPS 100–200, SPS 200–350+.</li>
+        <li>Keep spectrum and photoperiod consistent.</li>
+        <li>Use a PAR meter if possible for accuracy.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 
     <section class="stage tab-panel" id="tab-stock">
-      <div class="card">
-        <h3>Stocking & Acclimation</h3>
-<p class="section-why">Why this matters: stocking order and quarantine reduce aggression and disease, protecting your investment.</p>
-        <p>
-          Add life in a calm, deliberate sequence. Start with a modest clean-up crew to graze film algae and stir the sand.
-          Introduce hardy, compatible fish that fit your tank size and aquascape—territory matters. Quarantine when you can;
-          prevention beats treatment in a display. When the tank is stable, place beginner corals low and let them tell you
-          how they feel before you raise light or flow. Feed with intention: enough to nourish, not enough to pollute.
-          The best stocking plan is the one you can sustain week after week.
-        </p>
-        <div class="recap">
-          <h4>Recap</h4>
-          <ul>
-            <li>Order: CUC → hardy fish → beginner corals → expand slowly.</li>
-            <li>Mind compatibility, territory, and total capacity.</li>
-            <li>Quarantine when possible; feed deliberately.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+  <div class="card">
+    <h3>Stocking &amp; Acclimation</h3>
 
-    <section class="stage tab-panel" id="tab-care">
-      <div class="card">
-        <h3>Maintenance & Upgrades</h3>
-<p class="section-why">Why this matters: small, regular habits keep nutrients stable and equipment reliable so corals thrive long-term.</p>
-        <p>
-          Reefing thrives on rhythm. Each week, test nitrate and phosphate, clean the glass, and blow detritus from the rock.
-          Do water changes when nutrients drift or trace elements need refreshing. Each month, service pumps and skimmer,
-          replace or recharge media, and sanity-check heater accuracy. Add gear when it solves a real, repeating problem—like
-          a refugium to smooth nutrients or a dosing pump to hold alkalinity steady. Upgrades should make the tank <em>more</em>
-          stable, not more complicated. Change one thing at a time and let the system respond before changing anything else.
-        </p>
-        <div class="recap">
-          <h4>Recap</h4>
-          <ul>
-            <li>Weekly: NO₃/PO₄ test, glass clean, detritus blow-off, water change as needed.</li>
-            <li>Monthly+: clean pumps/skimmer; refresh carbon/media; verify heater/probes.</li>
-            <li>Upgrade only to increase stability; one change at a time.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+    <p class="section-why">
+      This is where your reef becomes alive, but also where patience matters most.
+Adding livestock too quickly, skipping quarantine, or neglecting acclimation can undo weeks of careful cycling and preparation.
+Each fish, coral, and invertebrate brings unseen microorganisms. some can be helpful, but some are harmful.
+Your goal is to introduce life slowly, safely, and intentionally, giving your new inhabitants the best chance to thrive.
+    </p>
+
+    <h4>1. Stocking Order</h4>
+    <p>Ensure that your tank is read by checking that Ammonia & Nitrates are 0 and Nitrates are measureable but not too high (<30). Add animals in stages to give bacteria time to adjust and prevent ammonia spikes.</p>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Phase</th><th>What to Add</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td>1️⃣ Clean-Up Crew</td><td>Snails, hermits, conchs</td><td>Eat algae and waste; stabilize microfauna.</td></tr>
+          <tr><td>2️⃣ Hardy Fish</td><td>Clownfish, goby, blenny</td><td>Handle minor parameter swings; low aggression.</td></tr>
+          <tr><td>3️⃣ Sensitive Fish</td><td>Wrasses, tangs, dwarf angels</td><td>Require stable water and mature biofilter.</td></tr>
+          <tr><td>4️⃣ Corals</td><td>Softies → LPS → SPS</td><td>Gradually increase biological demand.</td></tr>
+          <tr><td>5️⃣ Specialty</td><td>Anemones, clams, mandarins</td><td>Only after 6+ months of stability.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  <p class="small muted" "caption">Tip: Add one or two fish at a time, and wait at least 2–3 weeks between additions.
+This gives your biofilter time to adjust to the new bioload.</p>
+
+    <h4>2. Quarantine (QT)</h4>
+    <p>Quarantine is optional but highly recommended. It gives you control and the ability observe, detect, and treat disease before fish enter the display.</p>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Method</th><th>Pros</th><th>Cons</th><th>Setup Tips</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>With QT (Recommended)</b></td>
+            <td>Prevents parasites, allows treatment, reduces display stress.</td>
+            <td>Requires extra tank and monitoring.</td>
+            <td>10–20 gal bare-bottom, sponge filter, heater, PVC hiding tubes.</td>
+          </tr>
+          <tr>
+            <td><b>Without QT</b></td>
+            <td>Cheaper, simpler.</td>
+            <td>High disease risk; difficult to treat once fish are in display.</td>
+            <td>Buy only from trusted, disease-free suppliers.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p><b>Recommended QT Time:</b> 14–21 days for observation and optional preventive treatment. If symptoms return, restart the QT time and continue for another 14-21 days</p>
+
+    <h4>3. Drip Acclimation (Fish &amp; Inverts)</h4>
+    <ol>
+      <li>Float the sealed bag for 15–20 min to equalize temperature.</li>
+      <li>Pour bag contents into a clean bucket.</li>
+      <li>every 5 minutes pour a portion of your tank water until you've doubled the water volume. Roughly 20-30 minutes.</li>
+      <li>Gently net or hand-transfer livestock into the display. Never pour store water.</li>
+    </ol>
+    <p class="small muted">Tip: Turn off lights during introduction to reduce stress.</p>
+
+    <h4>4. Coral Dipping</h4>
+    <p>Corals carry microscopic pests. Always dip before adding to your tank.</p>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Coral Type</th><th>Example</th><th>Sensitivity</th><th>Dip Time</th></tr></thead>
+        <tbody>
+          <tr><td>Soft</td><td>Zoanthids, mushrooms</td><td>Low</td><td>5–7 min</td></tr>
+          <tr><td>LPS</td><td>Hammer, torch, frogspawn</td><td>Medium</td><td>5–10 min</td></tr>
+          <tr><td>SPS</td><td>Acropora, montipora</td><td>High</td><td>≈5 min</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Use products like Revive, Coral RX, or Bayer per instructions. Dip in tank water, rinse in clean water, and discard dip solution after use.</p>
+
+    <h4>5. Observation After Adding</h4>
+    <ul class="list">
+      <li><span>Dim lights for a few hours to reduce stress.</span></li>
+      <li><span>Watch breathing and swimming; heavy gilling = stress or ammonia.</span></li>
+      <li><span>Feed lightly at first; let new fish settle.</span></li>
+      <li><span>Move new corals slowly upward over 1–2 weeks for light acclimation.</span></li>
+    </ul>
+
+    <h4>6. Key Terms</h4>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+        <tbody>
+          <tr><td>Quarantine (QT)</td><td>Temporary isolation for observation/treatment of new fish.</td></tr>
+          <tr><td>Drip Acclimation</td><td>Slowly mixing tank and shipping water to avoid shock.</td></tr>
+          <tr><td>Coral Dip</td><td>Antipest rinse for corals before adding to display.</td></tr>
+          <tr><td>CUC</td><td>Clean-Up Crew—snails/crabs that manage waste and algae.</td></tr>
+          <tr><td>Bioload</td><td>Total waste produced by tank inhabitants.</td></tr>
+          <tr><td>Compatibility</td><td>Species’ ability to coexist peacefully.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="recap">
+      <h4>Recap</h4>
+      <ul>
+        <li>Add livestock gradually: CUC → hardy fish → sensitive fish → corals → specialty species.</li>
+        <li>Quarantine fish 14–21 days whenever possible.</li>
+        <li>Drip acclimate new fish/inverts; dip corals before placement.</li>
+        <li>Dim lights and monitor behavior during introduction.</li>
+        <li>Patience = long-term success.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="stage tab-panel" id="tab-maintenance">
+  <div class="card">
+    <h3>Maintenance &amp; Upgrades</h3>
+
+    <p class="section-why">
+     You have successfully created a living ecosystem in your reef tank and its success depends less on expensive gear and more on consistent habits. Routine testing, cleaning, and observation prevent 90% of reef problems before they start. When you maintain rhythm, your reef rewards you with stability and a beautiful display.
+    </p>
+
+    <h4>1. Daily &amp; Weekly Rhythm</h4>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Task</th><th>Frequency</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td>Feed livestock mindfully</td><td>Daily</td><td>Avoid overfeeding and excess nutrients.</td></tr>
+          <tr><td>Top off evaporation (ATO)</td><td>Daily</td><td>Keeps salinity stable.</td></tr>
+          <tr><td>Clean glass/surface film</td><td>2–3× per week</td><td>Improves viewing and gas exchange.</td></tr>
+          <tr><td>Blow detritus from rocks</td><td>Weekly</td><td>Prevents waste buildup and algae.</td></tr>
+          <tr><td>Test your water</td><td>Weekly</td><td>Track nutrient trends over time and keep a log, plenty of useful apps.</td></tr>
+          <tr><td>Partial water change (10–15%)</td><td>Weekly/Biweekly</td><td>Replenishes trace elements and resets chemistry.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>2. Monthly Deep Care</h4>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Task</th><th>Why</th><th>Tips</th></tr></thead>
+        <tbody>
+          <tr><td>Clean pumps, skimmer, powerheads</td><td>Flow loss = oxygen loss.</td><td>Soak in 50/50 vinegar-water 30 min; rinse well.</td></tr>
+          <tr><td>Replace/recharge filter media</td><td>Spent media stops working.</td><td>Change carbon monthly; replace GFO when PO₄ rises.</td></tr>
+          <tr><td>Verify heater calibration</td><td>Prevents overheating or crashes.</td><td>Compare with digital thermometer.</td></tr>
+          <tr><td>Inspect ATO sensors/tubing</td><td>Salt creep or snails can jam sensors.</td><td>Wipe and test manually.</td></tr>
+          <tr><td>Clean sump and skimmer cup</td><td>Removes detritus and sludge buildup.</td><td>Wipe skimmer neck weekly for best performance.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>3. Every 3–6 Months</h4>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Task</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td>Inspect and clean plumbing</td><td>Removes salt creep and buildup.</td></tr>
+          <tr><td>Replace light diffusers if yellowed</td><td>Restores full PAR output.</td></tr>
+          <tr><td>Service dosing pumps/tubing</td><td>Prevents clogging and salt crust.</td></tr>
+          <tr><td>Check cords and drip loops</td><td>Prevents corrosion and fire hazard.</td></tr>
+          <tr><td>Rinse bio-media gently in tank water</td><td>Preserves bacteria while clearing debris.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>4. When to Upgrade</h4>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Problem</th><th>Smart Upgrade</th><th>Why It Helps</th></tr></thead>
+        <tbody>
+          <tr><td>Frequent evaporation</td><td>Auto Top-Off (ATO)</td><td>Keeps salinity stable automatically.</td></tr>
+          <tr><td>Unstable alkalinity</td><td>Dosing pump</td><td>Maintains parameters precisely.</td></tr>
+          <tr><td>Nutrient swings</td><td>Refugium</td><td>Natural nutrient export via macroalgae.</td></tr>
+          <tr><td>Temperature drift</td><td>Temp controller</td><td>Prevents overheating/cooling issues.</td></tr>
+          <tr><td>Manual testing fatigue</td><td>Digital monitor</td><td>Automates logging; reduces guesswork.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="small muted">Upgrade only to improve stability or reduce risk. Make one change at a time and observe results for 2–3 weeks.</p>
+
+    <h4>5. Key Terms</h4>
+    <div class="course-table-wrapper">
+      <table class="course-table">
+        <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+        <tbody>
+          <tr><td>Trace Elements</td><td>Essential minerals replenished by water changes (e.g., iodine, strontium).</td></tr>
+          <tr><td>Detritus</td><td>Organic debris that decomposes into nitrate if not removed.</td></tr>
+          <tr><td>Vinegar Bath</td><td>Cleaning method using a 1:1 vinegar-water soak to remove buildup.</td></tr>
+          <tr><td>Refugium</td><td>Low-flow sump zone growing macroalgae for nutrient control.</td></tr>
+          <tr><td>Dosing Pump</td><td>Automates supplement addition (alkalinity, calcium, magnesium).</td></tr>
+          <tr><td>Calibration</td><td>Rechecking accuracy of probes, heaters, or refractometers.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="recap">
+      <h4>Recap</h4>
+      <ul>
+        <li>Weekly: test NO₃/PO₄, clean glass, blow detritus, water change as needed.</li>
+        <li>Monthly: clean pumps/skimmer, refresh media, check heater and probes.</li>
+        <li>Every 3–6 months: deep clean plumbing, inspect wiring and cords.</li>
+        <li>Upgrade only to increase stability! One change at a time.</li>
+        <li>Consistency, not constant change, builds success.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
   </main>
 
   <script>
@@ -883,20 +1245,96 @@ A second group converts nitrite into nitrate (NO₃⁻), which is far less harmf
       <button id="closeGlossary" class="secondary">Close</button>
     </div>
     <div class="modal-body">
-      <h4>Coral Families</h4>
-      <ul>
-        <li><b>Soft Corals</b> — Leathers, Zoas, Mushrooms.</li>
-        <li><b>LPS</b> — Large-Polyp Stony (Hammers, Duncans).</li>
-        <li><b>SPS</b> — Small-Polyp Stony (Acropora, Montipora).</li>
-      </ul>
-      <h4>Core Terms</h4>
-      <ul>
-        <li><b>PAR</b> — Light at coral height; target depends on corals.</li>
-        <li><b>Turnover</b> — Return pump flow ÷ tank gallons (~3–5×/hr).</li>
-        <li><b>Total Flow</b> — (Return + Powerheads) ÷ gallons.</li>
-        <li><b>ATO</b> — Auto Top-Off controls salinity.</li>
-      </ul>
-    </div>
+  <h4>System & Equipment</h4>
+  <ul>
+    <li><b>AIO (All-In-One)</b> — Display tank with built-in rear filtration chambers; no external sump.</li>
+    <li><b>Sump</b> — Separate tank in the stand that adds water volume and hides gear.</li>
+    <li><b>Return Pump</b> — Pushes water from sump to display; helps set turnover (3–5×/hr).</li>
+    <li><b>Powerhead / Wavemaker</b> — In-tank circulation pump for internal flow.</li>
+    <li><b>Protein Skimmer</b> — Removes dissolved organics with foam fractionation; boosts oxygenation.</li>
+    <li><b>Refugium</b> — Low-flow zone (often in sump) growing macroalgae/pods for natural nutrient export.</li>
+    <li><b>ATO (Auto Top-Off)</b> — Adds fresh water to offset evaporation and keep salinity stable.</li>
+    <li><b>Media Reactor</b> — Chamber that forces water through media (e.g., carbon, GFO).</li>
+    <li><b>GFO</b> — Granular Ferric Oxide; binds phosphate (PO₄).</li>
+  </ul>
+
+  <h4>Planning, Layout & Safety</h4>
+  <ul>
+    <li><b>Aquascape</b> — Rock structure for stability, flow, and coral placement.</li>
+    <li><b>Drip Loop</b> — Cable routing below the outlet to prevent water intrusion.</li>
+    <li><b>Turnover Rate</b> — Return flow ÷ display gallons (target ~3–5×/hr).</li>
+    <li><b>Total Flow</b> — (Return + powerheads) ÷ gallons; varies by coral type.</li>
+  </ul>
+
+  <h4>Water & Salt</h4>
+  <ul>
+    <li><b>RODI</b> — Reverse Osmosis + Deionization; near-zero TDS source water.</li>
+    <li><b>TDS</b> — Total Dissolved Solids (ppm); aim ≤5, ideally 0 for mixing.</li>
+    <li><b>DI Resin</b> — Final RODI stage that “polishes” water; replace when TDS rises.</li>
+    <li><b>Salinity</b> — 35 ppt (~1.025–1.026 SG); measure with refractometer.</li>
+    <li><b>Refractometer</b> — Optical tool for salinity; calibrate with 35 ppt fluid.</li>
+  </ul>
+
+  <h4>Core Parameters</h4>
+  <ul>
+    <li><b>Alkalinity (dKH)</b> — Buffers pH; supports skeletal growth (target ~8–12 dKH).</li>
+    <li><b>Calcium (Ca)</b> — Coral skeleton component (target ~400–450 ppm).</li>
+    <li><b>Magnesium (Mg)</b> — Helps prevent Ca/Alk precipitation (target ~1250–1350 ppm).</li>
+    <li><b>pH</b> — Acidity/alkalinity (typ. 7.9–8.3).</li>
+    <li><b>Temperature</b> — 77–80 °F (25–27 °C) with minimal daily swing.</li>
+  </ul>
+
+  <h4>Nitrogen Cycle</h4>
+  <ul>
+    <li><b>Seed</b> — Introduce live bacteria (bottled or live rock/sand) to start cycling.</li>
+    <li><b>Ammonia (NH₃/NH₄⁺)</b> — Toxic waste; first stage of the cycle.</li>
+    <li><b>Nitrite (NO₂⁻)</b> — Toxic intermediate; spikes mid-cycle.</li>
+    <li><b>Nitrate (NO₃⁻)</b> — End product; controlled by water changes/algae uptake.</li>
+    <li><b>Cycle Complete</b> — Ammonia = 0, Nitrite = 0, Nitrate present.</li>
+    <li><b>Biofilter</b> — Surfaces (rock/sand/media) where bacteria colonize.</li>
+    <li><b>Diatoms</b> — Early brown film algae; common during/after cycling.</li>
+  </ul>
+
+  <h4>Flow, Filtration & Nutrients</h4>
+  <ul>
+    <li><b>Laminar Flow</b> — Straight, constant stream; can be harsh if direct.</li>
+    <li><b>Random/Gyre Flow</b> — Alternating, sweeping currents; reduces dead spots.</li>
+    <li><b>Pulse/Wave</b> — On/off rhythm; gentle sway (popular for LPS/softies).</li>
+    <li><b>Dead Spot</b> — Area with little/no flow where detritus accumulates.</li>
+    <li><b>Bioload</b> — Total waste production from livestock.</li>
+    <li><b>Nitrate (NO₃)</b> — Target ~2–20 ppm for reefs.</li>
+    <li><b>Phosphate (PO₄)</b> — Target ~0.01–0.2 ppm (keep balanced with NO₃).</li>
+  </ul>
+
+  <h4>Lighting</h4>
+  <ul>
+    <li><b>PAR</b> — Photosynthetically Active Radiation; usable light for corals.</li>
+    <li><b>Spectrum</b> — Blend of wavelengths (blue/UV heavy for photosynthesis).</li>
+    <li><b>Photoperiod</b> — Daily duration of light.</li>
+    <li><b>Kelvin (K)</b> — Color temperature (10–14K daylight to bluer reef looks).</li>
+    <li><b>Bleaching</b> — Loss of symbiotic algae due to excess light/heat/stress.</li>
+    <li><b>FOWLR</b> — Fish Only With Live Rock (light mainly for viewing/aesthetics).</li>
+  </ul>
+
+  <h4>Stocking & Acclimation</h4>
+  <ul>
+    <li><b>CUC (Clean-Up Crew)</b> — Snails/hermits that manage algae and waste.</li>
+    <li><b>Quarantine (QT)</b> — Temporary isolation to observe/treat fish.</li>
+    <li><b>Drip Acclimation</b> — Gradual mixing of tank and shipping water.</li>
+    <li><b>Coral Dip</b> — Anti-pest rinse before adding corals to display.</li>
+    <li><b>Compatibility</b> — Likelihood species co-exist peacefully.</li>
+  </ul>
+
+  <h4>Maintenance & Upgrades</h4>
+  <ul>
+    <li><b>Trace Elements</b> — Minor minerals replenished by water changes.</li>
+    <li><b>Detritus</b> — Organic debris that breaks down to nutrients if not removed.</li>
+    <li><b>Vinegar Bath</b> — 1:1 vinegar/water soak to remove mineral buildup.</li>
+    <li><b>Dosing Pump</b> — Automates Alk/Ca/Mg additions.</li>
+    <li><b>Calibration</b> — Re-checking instruments (probes, refractometer, heaters).</li>
+  </ul>
+</div>
+
   </div>
 </div>
 
@@ -912,5 +1350,26 @@ A second group converts nitrite into nitrate (NO₃⁻), which is far less harmf
     if (e.target.id === 'glossaryModal') e.currentTarget.classList.add('hidden');
   });
 </script>
+<script>
+  // Scroll to top when switching between Crash Course tabs
+  document.querySelectorAll('#course-tabs .tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.querySelector(btn.dataset.target);
+      if (!target) return;
+
+      // hide all panels, show the target one
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('visible'));
+      target.classList.add('visible');
+
+      // update active tab state
+      document.querySelectorAll('#course-tabs .tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+
+      // scroll to top smoothly
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+</script>
+
 </body>
 </html>

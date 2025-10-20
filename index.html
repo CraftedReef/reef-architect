@@ -76,22 +76,18 @@
         </label>
       </div>
 
-      <button id="openGlossary" class="icon-btn">Glossary</button>
+      <a href="welcome.html" class="secondary">Home</a>
       <a href="crash-course.html" class="cta">Crash Course</a>
-<a href="about.html" class="secondary">About</a>
-<a href="feedback.html" class="secondary">Review</a>
-      
-      <div class="export-group">
-        <button id="exportPortrait" class="secondary">Export → PDF (Portrait)</button>
-        <button id="exportLandscape" class="secondary">Export → PDF (Landscape)</button>
-      </div>
+      <a href="about.html" class="secondary">About</a>
+      <a href="feedback.html" class="secondary">Review</a>
+      <button id="openGlossary" class="icon-btn">Glossary</button>
+          
     </div>
   </header>
 
   <main id="app">
     <section id="stage-tabs" class="tabs">
-      <button class="tab active" data-stage="0">Welcome</button>
-      <button class="tab" data-stage="1">1. Tank & Equipment</button>
+      <button class="tab active" data-stage="1">1. Tank & Equipment</button>
       <button class="tab" data-stage="2">
   2. Fish &amp; Inverts
   <span id="animalsBadge" class="badge" aria-label="Total fish and inverts"></span>
@@ -101,56 +97,8 @@
       <button class="tab" data-stage="5">Visualizer</button>
     </section>
 
-    <!-- Welcome -->
-    <section id="stage-0" class="stage visible">
-      <div class="card">
-        <h2>Welcome to Reef Architect</h2>
-        <p>
-  Build your reef step-by-step with volume-aware gear picks, capacity guidance, and compatibility notes.
-  If you’re brand new, use our <a href="crash-course.html" class="link">Crash Course into Reefing</a> for a quick,
-  eight-phase overview of planning, setup, cycling, stocking, and care—then come back here to build with confidence.
-</p>
-
-        <ul>
-          <li><b>Beginner</b> mode keeps choices simple and safe. <b>Experienced</b> unlocks everything.</li>
-          <li>Equipment lists auto-filter to your tank volume.</li>
-          <li>Stocking “<b>Capacity</b>” meter helps avoid overcrowding.</li>
-          <li>Summary includes color-coded compatibility notes and suggestions.</li>
-        </ul>
-        <button id="startBtn" class="primary">Start →</button>
-	<a href="crash-course.html" class="secondary icon-btn">Crash Course →</a>
-      </div>
-
-      <!-- Quick Start on Welcome -->
-      <section class="card" id="quickStart">
-        <h2>Just do it for me</h2>
-        <div class="grid grid-5">
-          <div class="qs-card">
-            <h3>20g Softie Nano</h3><p>Low-maintenance corals and peaceful fish.</p>
-            <button class="primary" onclick="applyQuickStart('nano20')">Go →</button>
-          </div>
-          <div class="qs-card">
-            <h3>32g BioCube Softie</h3><p>Classic AIO starter with soft corals.</p>
-            <button class="primary" onclick="applyQuickStart('biocube32')">Go →</button>
-          </div>
-          <div class="qs-card">
-            <h3>40g Mixed Reef</h3><p>Balanced LPS/Softies with moderate gear.</p>
-            <button class="primary" onclick="applyQuickStart('mixed40')">Go →</button>
-          </div>
-          <div class="qs-card">
-            <h3>75g FOWLR</h3><p>Fish-focused setup, simple lighting needs.</p>
-            <button class="primary" onclick="applyQuickStart('fowlr75')">Go →</button>
-          </div>
-          <div class="qs-card">
-            <h3>90g LPS Reef</h3><p>Roomy tank with moderate flow & light.</p>
-            <button class="primary" onclick="applyQuickStart('lps90')">Go →</button>
-          </div>
-        </div>
-      </section>
-    </section>
-
-    <!-- Stage 1 -->
-    <section id="stage-1" class="stage">
+        <!-- Stage 1 -->
+    <section id="stage-1" class="stage visible">
       <h2>Stage 1 — Tank, Sump & Equipment</h2>
 <section class="card">
   <h2>Guided Setup (Beginner)</h2>
@@ -283,7 +231,7 @@
 
       <div class="nav-row">
   <div style="margin-left:auto; display:flex; gap:.5rem">
-    <button class="primary back-btn" data-prev="0">← Back</button>
+    <a class="btn primary" href="welcome.html">← Back</a>
     <button class="primary next-btn" data-next="2">Next →</button>
   </div>
 </div>
@@ -379,6 +327,7 @@
   <div style="margin-left:auto; display:flex; gap:.5rem">
     <button class="primary back-btn" data-prev="3">← Back</button>
     <button class="primary restart-btn">⟳ Restart</button>
+    <button id="exportPdfPortrait" class="primary">Export</button>
     <button class="primary" id="goViz" data-next="5">Visualize →</button>
   </div>
 </div>
@@ -428,20 +377,101 @@
         <button id="closeGlossary" class="icon-btn">Close</button>
       </div>
       <div class="modal-body">
-        <ul>
-          <li><b>PAR</b>: Light intensity for coral growth.</li>
-          <li><b>Turnover</b>: Return pump gph ÷ tank gallons (aim 3–5×).</li>
-          <li><b>Circulation</b>: Flow from powerheads + return (varies by coral type).</li>
-          <li><b>Sump</b>: Separate filter box under the tank; adds water volume and hides gear.</li>
-          <li><b>AIO</b>: All-in-one tank with rear filter compartment (no external sump).</li>
-          <li><b>W/gal</b>: Heater watts per gallon (target ~3–5).</li>
-        </ul>
-      </div>
+  <h4>System & Equipment</h4>
+  <ul>
+    <li><b>AIO (All-In-One)</b> — Display tank with built-in rear filtration chambers; no external sump.</li>
+    <li><b>Sump</b> — Separate tank in the stand that adds water volume and hides gear.</li>
+    <li><b>Return Pump</b> — Pushes water from sump to display; helps set turnover (3–5×/hr).</li>
+    <li><b>Powerhead / Wavemaker</b> — In-tank circulation pump for internal flow.</li>
+    <li><b>Protein Skimmer</b> — Removes dissolved organics with foam fractionation; boosts oxygenation.</li>
+    <li><b>Refugium</b> — Low-flow zone (often in sump) growing macroalgae/pods for natural nutrient export.</li>
+    <li><b>ATO (Auto Top-Off)</b> — Adds fresh water to offset evaporation and keep salinity stable.</li>
+    <li><b>Media Reactor</b> — Chamber that forces water through media (e.g., carbon, GFO).</li>
+    <li><b>GFO</b> — Granular Ferric Oxide; binds phosphate (PO₄).</li>
+  </ul>
+
+  <h4>Planning, Layout & Safety</h4>
+  <ul>
+    <li><b>Aquascape</b> — Rock structure for stability, flow, and coral placement.</li>
+    <li><b>Drip Loop</b> — Cable routing below the outlet to prevent water intrusion.</li>
+    <li><b>Turnover Rate</b> — Return flow ÷ display gallons (target ~3–5×/hr).</li>
+    <li><b>Total Flow</b> — (Return + powerheads) ÷ gallons; varies by coral type.</li>
+  </ul>
+
+  <h4>Water & Salt</h4>
+  <ul>
+    <li><b>RODI</b> — Reverse Osmosis + Deionization; near-zero TDS source water.</li>
+    <li><b>TDS</b> — Total Dissolved Solids (ppm); aim ≤5, ideally 0 for mixing.</li>
+    <li><b>DI Resin</b> — Final RODI stage that “polishes” water; replace when TDS rises.</li>
+    <li><b>Salinity</b> — 35 ppt (~1.025–1.026 SG); measure with refractometer.</li>
+    <li><b>Refractometer</b> — Optical tool for salinity; calibrate with 35 ppt fluid.</li>
+  </ul>
+
+  <h4>Core Parameters</h4>
+  <ul>
+    <li><b>Alkalinity (dKH)</b> — Buffers pH; supports skeletal growth (target ~8–12 dKH).</li>
+    <li><b>Calcium (Ca)</b> — Coral skeleton component (target ~400–450 ppm).</li>
+    <li><b>Magnesium (Mg)</b> — Helps prevent Ca/Alk precipitation (target ~1250–1350 ppm).</li>
+    <li><b>pH</b> — Acidity/alkalinity (typ. 7.9–8.3).</li>
+    <li><b>Temperature</b> — 77–80 °F (25–27 °C) with minimal daily swing.</li>
+  </ul>
+
+  <h4>Nitrogen Cycle</h4>
+  <ul>
+    <li><b>Seed</b> — Introduce live bacteria (bottled or live rock/sand) to start cycling.</li>
+    <li><b>Ammonia (NH₃/NH₄⁺)</b> — Toxic waste; first stage of the cycle.</li>
+    <li><b>Nitrite (NO₂⁻)</b> — Toxic intermediate; spikes mid-cycle.</li>
+    <li><b>Nitrate (NO₃⁻)</b> — End product; controlled by water changes/algae uptake.</li>
+    <li><b>Cycle Complete</b> — Ammonia = 0, Nitrite = 0, Nitrate present.</li>
+    <li><b>Biofilter</b> — Surfaces (rock/sand/media) where bacteria colonize.</li>
+    <li><b>Diatoms</b> — Early brown film algae; common during/after cycling.</li>
+  </ul>
+
+  <h4>Flow, Filtration & Nutrients</h4>
+  <ul>
+    <li><b>Laminar Flow</b> — Straight, constant stream; can be harsh if direct.</li>
+    <li><b>Random/Gyre Flow</b> — Alternating, sweeping currents; reduces dead spots.</li>
+    <li><b>Pulse/Wave</b> — On/off rhythm; gentle sway (popular for LPS/softies).</li>
+    <li><b>Dead Spot</b> — Area with little/no flow where detritus accumulates.</li>
+    <li><b>Bioload</b> — Total waste production from livestock.</li>
+    <li><b>Nitrate (NO₃)</b> — Target ~2–20 ppm for reefs.</li>
+    <li><b>Phosphate (PO₄)</b> — Target ~0.01–0.2 ppm (keep balanced with NO₃).</li>
+  </ul>
+
+  <h4>Lighting</h4>
+  <ul>
+    <li><b>PAR</b> — Photosynthetically Active Radiation; usable light for corals.</li>
+    <li><b>Spectrum</b> — Blend of wavelengths (blue/UV heavy for photosynthesis).</li>
+    <li><b>Photoperiod</b> — Daily duration of light.</li>
+    <li><b>Kelvin (K)</b> — Color temperature (10–14K daylight to bluer reef looks).</li>
+    <li><b>Bleaching</b> — Loss of symbiotic algae due to excess light/heat/stress.</li>
+    <li><b>FOWLR</b> — Fish Only With Live Rock (light mainly for viewing/aesthetics).</li>
+  </ul>
+
+  <h4>Stocking & Acclimation</h4>
+  <ul>
+    <li><b>CUC (Clean-Up Crew)</b> — Snails/hermits that manage algae and waste.</li>
+    <li><b>Quarantine (QT)</b> — Temporary isolation to observe/treat fish.</li>
+    <li><b>Drip Acclimation</b> — Gradual mixing of tank and shipping water.</li>
+    <li><b>Coral Dip</b> — Anti-pest rinse before adding corals to display.</li>
+    <li><b>Compatibility</b> — Likelihood species co-exist peacefully.</li>
+  </ul>
+
+  <h4>Maintenance & Upgrades</h4>
+  <ul>
+    <li><b>Trace Elements</b> — Minor minerals replenished by water changes.</li>
+    <li><b>Detritus</b> — Organic debris that breaks down to nutrients if not removed.</li>
+    <li><b>Vinegar Bath</b> — 1:1 vinegar/water soak to remove mineral buildup.</li>
+    <li><b>Dosing Pump</b> — Automates Alk/Ca/Mg additions.</li>
+    <li><b>Calibration</b> — Re-checking instruments (probes, refractometer, heaters).</li>
+  </ul>
+</div>
+
     </div>
   </div>
 
   <footer class="footer">
-    <span>Reef Architect v11.4 — © 2025</span>
+    <span>Reef Architect v11.6 — © 2025</span>
   </footer>
 
 <!-- Old static data files no longer needed
