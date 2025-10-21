@@ -38,6 +38,8 @@
   --meter-fill: #3b82f6;
 
   --link: #93c5fd;
+
+  --topbar-offset: 58px;
 }
 
 /* reset-ish */
@@ -68,7 +70,11 @@ a:hover { text-decoration: underline; }
   position: sticky; top: 0; z-index: 50;
   display: flex; align-items: center; justify-content: space-between;
   padding: 12px 16px; background: var(--bg-elev); border-bottom: 1px solid var(--card-border);
+  transition: transform .25s ease-in-out;
 }
+
+.topbar.topbar--hidden { transform: translateY(-100%); }
+
 .brand h1 { margin: 0; font-size: 1.25rem; font-weight: 700; }
 .subtitle { display:block; font-size: .85rem; color: var(--muted); margin-top: 2px; }
 
@@ -77,8 +83,43 @@ a:hover { text-decoration: underline; }
 /* tabs */
 .tabs {
   display: flex; gap: 6px; padding: 12px 16px; background: var(--tab-bg);
-  position: sticky; top: 58px; z-index: 40; border-bottom: 1px solid var(--card-border);
+  position: sticky; top: var(--topbar-offset); z-index: 40; border-bottom: 1px solid var(--card-border);
 }
+
+@media (max-width: 1024px) {
+  /* Crash Course tabs */
+  #course-tabs {
+    overflow-x: auto;           /* horizontal scroll */
+    overflow-y: hidden;
+    flex-wrap: nowrap;          /* keep buttons on one line */
+    white-space: nowrap;        /* prevent wrapping */
+    -webkit-overflow-scrolling: touch; /* smooth iOS momentum */
+    scroll-snap-type: x proximity;
+    touch-action: pan-x;        /* improve swipe on touch devices */
+    scrollbar-gutter: stable both-edges;
+  }
+  #course-tabs .tab {
+    flex: 0 0 auto;             /* keep each button’s width */
+    scroll-snap-align: start;
+  }
+
+  /* Stage tabs (builder) – keep behavior consistent */
+  #stage-tabs {
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    touch-action: pan-x;
+    scrollbar-gutter: stable both-edges;
+  }
+  #stage-tabs .tab {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+}
+
 .tabs .tab {
   background: transparent; border: 1px solid var(--card-border); color: var(--text);
   padding: 8px 12px; border-radius: 10px; cursor: pointer;
@@ -103,6 +144,18 @@ h3 { margin: 12px 0 10px; font-size: 1.05rem; }
   /* Blue glow highlight (matches login logo, no movement) */
   box-shadow: 0 0 25px rgba(14, 165, 233, 0.35);
   transition: box-shadow 0.3s ease;
+}
+/* --- Guided Setup card: thinner and centered --- */
+.card.guided-setup {
+  max-width: 720px;      /* narrower than full stage */
+  margin: 0 auto 20px;   /* center it, keep bottom gap */
+  text-align: left;      /* ensure normal text alignment */
+}
+
+/* Optional: tidy the list so bullets fill full width */
+.card.guided-setup .list li {
+  grid-template-columns: 1fr;  /* remove extra blank column */
+  padding: 6px 8px;
 }
 
 .row { display: grid; grid-template-columns: 180px 1fr; gap: 10px; align-items: center; margin: 8px 0; }
@@ -209,6 +262,16 @@ a.secondary:hover { border-color: var(--outline); }
   margin-right: 10px;
 border-radius: 10px; /* optional: keeps the rounded style */
 }
+/* --- Logo link (clickable logo to Welcome page) --- */
+.logo-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;   /* no underline */
+}
+.logo-link img {
+  cursor: pointer;         /* hand cursor on hover */
+}
+
 /* Header stacking on narrow screens */
 @media (max-width: 700px) {
   .topbar { flex-direction: column; align-items: flex-start; gap: .5rem; }
@@ -676,6 +739,14 @@ table.mini thead th {
   width: 100% !important; 
   height: 100% !important; 
   display: block; 
+}
+/* Optional: slim horizontal scrollbar for tab strips (WebKit/Blink) */
+#course-tabs::-webkit-scrollbar,
+#stage-tabs::-webkit-scrollbar { height: 6px; }
+#course-tabs::-webkit-scrollbar-thumb,
+#stage-tabs::-webkit-scrollbar-thumb {
+  background: #2a385a;
+  border-radius: 4px;
 }
 
 

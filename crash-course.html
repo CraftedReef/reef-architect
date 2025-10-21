@@ -54,36 +54,24 @@
   </style>
 </head>
 <body>
-  <header class="topbar">
-   <div class="brand">
-  <img src="Images/logo.png" alt="Reef Architect logo" style="height:40px; vertical-align:middle; border-radius:8px;">
-  <span class="subtitle">Plan • Build • Thrive</span>
-</div>
-    <div class="controls">
+<header class="topbar">
+  <div class="brand">
+    <a href="welcome.html" class="logo-link">
+      <img src="Images/logo.png" alt="Reef Architect logo" style="height:40px; vertical-align:middle; border-radius:8px;">
+    </a>
+    <span class="subtitle">Plan • Build • Thrive</span>
+  </div>
+  <div class="controls">
       <a href="welcome.html" class="cta">Aquarium Builder</a>
       <button id="openGlossary" class="icon-btn">Glossary</button>
       </div>
   </header>
 
   <main id="app">
- </section>
-    <section class="course-hero">
-      <h2>Crash Course into Reefing</h2>
-       <p>
-  This crash course is organized into eight phases to introduce the basics of planning, building, and caring for your new reef aquarium as it matures. Remember we are building our own ecosystem from the ground up and having the knowledge to not only build it but also caring for it is paramount. Read each section to better understand every piece of this hobby so that you can start off on the right foot and make life much easier for you and your aquarium. Follow the order and take your time. Stability beats speed.
-</p>
-<section class="card">
-  <h2>Before You Start: What is an Aquarium System?</h2>
-  <p>
-   A reef aquarium is a miniature ocean, a living ecosystem that we personally create within our homes. The water acts as the ocean itself, carrying oxygen and nutrients to everything that lives within it. FIlters and pums keep the water moving and clean, while the heater keeps it warm like the tropics and the lights provide the energy corals need to grow just as sunlight fuels reefs in nature
-
-   Every part of the system that you choose will work together to keep life stable. In this guide, every section will explain why these pieces matter and how to choose them for your reef. 
-  </p>
-</section>
-
-    <!-- Tabs -->
+        <!-- Tabs -->
     <section class="tabs" id="course-tabs">
-      <button class="tab active" data-target="#tab-plan">Plan & Gear</button>
+      <button class="tab active" data-tab="#tab-intro">Introduction</button>
+      <button class="tab" data-target="#tab-plan">Plan & Gear</button>
       <button class="tab" data-target="#tab-water">Water & Salt</button>
       <button class="tab" data-target="#tab-setup">Setup Day</button>
       <button class="tab" data-target="#tab-cycle">Cycle & First Tests</button>
@@ -94,7 +82,26 @@
     </section>
 
     <!-- Panels -->
-<section class="stage visible tab-panel" id="tab-plan">
+<section class="stage tab-panel visible" id="tab-intro">
+  <div class="card">
+    <h3>Crash Course into Reefing</h3>
+
+    <p class="section-why">
+     This crash course is organized into eight phases to introduce the basics of planning, building, and caring for your new reef aquarium as it matures. Remember we are building our own ecosystem from the ground up and having the knowledge to not only build it but also caring for it is paramount. Read each section to better understand every piece of this hobby so that you can start off on the right foot and make life much easier for you and your aquarium. Follow the order and take your time. Stability beats speed.
+    </p>
+
+    <div class="card" style="margin-top:12px;">
+      <h4>Before You Start: What is an Aquarium System?</h4>
+      <p>
+          A reef aquarium is a miniature ocean, a living ecosystem that we personally create within our homes. The water acts as the ocean itself, carrying oxygen and nutrients to everything that lives within it. FIlters and pums keep the water moving and clean, while the heater keeps it warm like the tropics and the lights provide the energy corals need to grow just as sunlight fuels reefs in nature
+
+   Every part of the system that you choose will work together to keep life stable. In this guide, every section will explain why these pieces matter and how to choose them for your reef. 
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="stage tab-panel" id="tab-plan">
   <div class="card">
     <h3>Plan &amp; Gear</h3>
 
@@ -1369,6 +1376,44 @@ This gives your biofilter time to adjust to the new bioload.</p>
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
+</script>
+<script>
+  // --- Auto-hide Topbar on scroll (down hides, up shows) ---
+  (function setupTopbarAutoHide(){
+    const header = document.querySelector('.topbar');
+    if (!header) return;
+
+    let lastY = window.scrollY;
+    const THRESH = 8; // pixels before we react
+
+    function setOffset(){
+      const hidden = header.classList.contains('topbar--hidden');
+      const h = header.getBoundingClientRect().height || 58;
+      document.documentElement.style.setProperty('--topbar-offset', hidden ? '0px' : `${h}px`);
+    }
+
+    function onScroll(){
+      const y = window.scrollY;
+      const dy = y - lastY;
+      lastY = y;
+
+      if (y < 10) {
+        header.classList.remove('topbar--hidden');
+        setOffset();
+        return;
+      }
+      if (Math.abs(dy) < THRESH) return;
+
+      if (dy > 0) header.classList.add('topbar--hidden');    // scrolling down
+      else        header.classList.remove('topbar--hidden'); // scrolling up
+
+      setOffset();
+    }
+
+    setOffset();
+    window.addEventListener('scroll', onScroll, { passive:true });
+    window.addEventListener('resize', setOffset);
+  })();
 </script>
 
 </body>

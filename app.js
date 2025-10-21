@@ -64,7 +64,15 @@ async function loadFromSheetsAndOverwriteGlobals() {
 
 
 // --- Tanks & sumps (merge all tank-related tabs) ---
-const tanksArrays = await Promise.all(SHEETS.tanksTabs.map(url => fetchCSV(url)));
+// ✅ Use cache to avoid re-fetching every visit
+let tanksArrays = await Promise.all(
+  SHEETS.tanksTabs.map((url, i) => fetchCSVFromCache(url, `tanksTab${i}`))
+);
+if (!tanksArrays.length || !tanksArrays.some(a => a && a.length)) {
+  console.warn("Cache returned empty Tanks/Sumps — retrying live fetch…");
+  // live (uncached) retry
+  tanksArrays = await Promise.all(SHEETS.tanksTabs.map(url => fetchCSV(url)));
+}
 const tankCombined = tanksArrays.flat();
 
 // If your tabs include a "type" column, we use it. If not, we detect by columns present.
@@ -121,8 +129,16 @@ SUMPS = tankCombined
   }));
 
 // --- Equipment (merge all equipment tabs) ---
-const eqArrays = await Promise.all(SHEETS.equipmentTabs.map(url => fetchCSV(url)));
+// ✅ Cache each equipment tab
+let eqArrays = await Promise.all(
+  SHEETS.equipmentTabs.map((url, i) => fetchCSVFromCache(url, `equipmentTab${i}`))
+);
+if (!eqArrays.length || !eqArrays.some(a => a && a.length)) {
+  console.warn("Cache returned empty Equipment — retrying live fetch…");
+  eqArrays = await Promise.all(SHEETS.equipmentTabs.map(url => fetchCSV(url)));
+}
 const eqRows = eqArrays.flat();
+
 // Pre-normalize category once so picking is reliable
 const eqNormalized = eqRows.map(r => ({
   ...r,
@@ -219,10 +235,15 @@ EQUIPMENT = eqRows;   // (you can keep eqRows or switch to eqNormalized if you p
 
 
 // --- Species (fish + inverts + corals from two tabs) ---
-// We convert raw CSV rows into the shape the UI expects.
+// ✅ Cache species tabs as well
+let fishRows  = await fetchCSVFromCache(SHEETS.speciesFish,   "speciesFish");
+let coralRows = await fetchCSVFromCache(SHEETS.speciesCorals, "speciesCorals");
+if ((!fishRows || !fishRows.length) || (!coralRows || !coralRows.length)) {
+  console.warn("Cache returned empty Species — retrying live fetch…");
+  fishRows  = await fetchCSV(SHEETS.speciesFish);
+  coralRows = await fetchCSV(SHEETS.speciesCorals);
+}
 
-const fishRows  = await fetchCSV(SHEETS.speciesFish);
-const coralRows = await fetchCSV(SHEETS.speciesCorals);
 // console.log("[Debug] speciesFish rows:", fishRows.length);
 // console.log("[Debug] speciesFish distinct types:", [...new Set(fishRows.map(r => String(r.type || "").trim().toLowerCase()))]);
 // console.log("[Debug] first 2 fish rows:", fishRows.slice(0, 2));
@@ -287,6 +308,130 @@ CORALS = coralRows.map(r => ({
 const $ = (s)=>document.querySelector(s);
 const $$ = (s)=>Array.from(document.querySelectorAll(s));
 const el = (t, c)=>{ const n=document.createElement(t); if(c) n.className=c; return n; };
+// --- Sheets cache settings ---
+const CACHE_VERSION = 'v2';                 // bump to invalidate all cached tabs
+const CACHE_TTL_MS  = 6 * 60 * 60 * 1000;   // 6 hours
+
+function cacheKey(key){ return `reef:${CACHE_VERSION}:${key}`; }
+
+// Treat empty/HTML/error-y strings as "bad"
+function looksBadText(txt){
+  if (!txt) return true;
+  const s = String(txt).trim();
+  if (s.length < 20) return true;                  // too small to be a CSV
+  const head = s.slice(0, 200).toLowerCase();
+  if (head.includes('<html') || head.includes('<!doctype')) return true; // HTML error page
+  return false;
+}
+
+function getCachedText(key){
+  try{
+    const raw = localStorage.getItem(cacheKey(key));
+    if(!raw) return null;
+    const obj = JSON.parse(raw);
+    if(!obj || !obj.data || !obj.ts) return null;
+    if(Date.now() - obj.ts > CACHE_TTL_MS) return null; // expired
+    if(looksBadText(obj.data)) return null;             // ignore junk
+    return obj.data;
+  }catch(e){ return null; }
+}
+
+function setCachedText(key, text){
+  try{
+    if (looksBadText(text)) return;   // never cache junk
+    localStorage.setItem(cacheKey(key), JSON.stringify({ ts: Date.now(), data: text }));
+  }catch(e){ /* ignore quota/blocked */ }
+}
+
+async function fetchTextWithCache(url, key){
+  const cached = getCachedText(key);
+  if(cached) return cached;
+
+  const res = await fetch(url, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`Fetch failed (${res.status}) for ${key}`);
+
+  const txt = await res.text();
+  if (looksBadText(txt)) {
+    // don't cache — force live on next attempt too
+    throw new Error(`Received non-CSV content for ${key}`);
+  }
+  setCachedText(key, txt);
+  return txt;
+}
+
+// Clear this version's cache; expose to Console for quick use
+function clearSheetsCache(){
+  const prefix = `reef:${CACHE_VERSION}:`;
+  const toDelete = [];
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i);
+    if(k && k.startsWith(prefix)) toDelete.push(k);
+  }
+  toDelete.forEach(k => localStorage.removeItem(k));
+}
+window.clearSheetsCache = clearSheetsCache;   // ← add this line so you can run it in Console
+// Parse CSV text (from cache or live) into row-objects (lowercased headers)
+async function fetchCSVFromCache(url, key){
+  const text = await fetchTextWithCache(url, key);
+  const trimmed = (text || "").trim();
+  if (!trimmed) return [];
+
+  const [headerLine, ...lines] = trimmed.split("\n");
+  const headers = headerLine.split(",").map(h => h.trim().toLowerCase());
+
+  return lines
+    .filter(l => l.trim().length)
+    .map(line => {
+      const values = line.split(",").map(v => {
+        const t = v.trim();
+        return (t.startsWith('"') && t.endsWith('"')) ? t.slice(1, -1) : t;
+      });
+      const row = {};
+      headers.forEach((h, i) => { row[h] = values[i]; });
+      return row;
+    });
+}
+
+// --- Auto-hide Topbar on scroll (down hides, up shows) ---
+function setupTopbarAutoHide(){
+  const header = document.querySelector('.topbar');
+  if (!header) return;
+
+  let lastY = window.scrollY;
+  const THRESH = 8; // pixels before we react
+
+  function setOffset(){
+    const hidden = header.classList.contains('topbar--hidden');
+    // measure current header height (fallback 58)
+    const h = header.getBoundingClientRect().height || 58;
+    document.documentElement.style.setProperty('--topbar-offset', hidden ? '0px' : `${h}px`);
+  }
+
+  function onScroll(){
+    const y = window.scrollY;
+    const dy = y - lastY;
+    lastY = y;
+
+    // always show near top
+    if (y < 10) {
+      header.classList.remove('topbar--hidden');
+      setOffset();
+      return;
+    }
+    if (Math.abs(dy) < THRESH) return;
+
+    if (dy > 0) header.classList.add('topbar--hidden');    // scrolling down
+    else        header.classList.remove('topbar--hidden'); // scrolling up
+
+    setOffset();
+  }
+
+  // initial measure + listeners
+  setOffset();
+  window.addEventListener('scroll', onScroll, { passive:true });
+  window.addEventListener('resize', setOffset);
+}
+
 function setAnimalsBadge(){
   const badge = document.getElementById("animalsBadge");
   if (!badge) return;
@@ -417,12 +562,14 @@ function resetAll(){
 
   // refresh UI + go to Welcome
   populateAll(); updateTank(); renderBudgetNow(); renderSummary();
-  switchStage('0');
+  window.location.href = "welcome.html";
 }
 
 // ------- Init -------
 function init(){
- 
+  // NEW: enable auto-hide header behavior
+  setupTopbarAutoHide();
+
   // Tabs
   $$('#stage-tabs .tab').forEach(btn=>{
     btn.addEventListener('click',()=>switchStage(btn.dataset.stage));
